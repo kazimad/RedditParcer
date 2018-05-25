@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="list_image_size">100dp</dimen>
+
+    <!-- Text dimentions -->
+    <dimen name="text_nano">8sp</dimen>
+    <dimen name="text_mini">9sp</dimen>
+    <dimen name="text_smaller">10sp</dimen>
+    <dimen name="text_small">12sp</dimen>
+    <dimen name="text_normal_sub">13sp</dimen>
+    <dimen name="text_normal">14sp</dimen>
+    <dimen name="text_middle">15sp</dimen>
+    <dimen name="text_middle_above">16sp</dimen>
+    <dimen name="text_big">17sp</dimen>
+    <dimen name="text_bigger">18sp</dimen>
+    <dimen name="text_biggest">19sp</dimen>
+    <dimen name="text_huge">20sp</dimen>
+    <dimen name="text_huger">22sp</dimen>
+    <dimen name="text_hugest">26sp</dimen>
+    <dimen name="text_large">28sp</dimen>
+    <dimen name="text_larger">32sp</dimen>
+    <dimen name="text_extra_large">45sp</dimen>
+    <dimen name="text_extra_larger">50sp</dimen>
+    <dimen name="txt_common_size">16sp</dimen>
+
+    <!-- Width/height dimentions -->
+    <dimen name="dimen_micro">1dp</dimen>
+    <dimen name="dimen_mini">2dp</dimen>
+    <dimen name="dimen_smaller">3dp</dimen>
+    <dimen name="dimen_small">4dp</dimen>
+    <dimen name="dimen_little">5dp</dimen>
+    <dimen name="dimen_big_little">7dp</dimen>
+    <dimen name="dimen_bigger_little">6dp</dimen>
+    <dimen name="dimen_normal">8dp</dimen>
+    <dimen name="dimen_normal_above">9dp</dimen>
+    <dimen name="dimen_middle">10dp</dimen>
+    <dimen name="dimen_middle_above">11dp</dimen>
+    <dimen name="dimen_above">12dp</dimen>
+    <dimen name="dimen_high_above">14dp</dimen>
+    <dimen name="dimen_higher_above">15dp</dimen>
+    <dimen name="dimen_big">16dp</dimen>
+    <dimen name="dimen_bigger">18dp</dimen>
+    <dimen name="dimen_biggest">20dp</dimen>
+    <dimen name="dimen_extra_big">22dp</dimen>
+    <dimen name="dimen_huge">24dp</dimen>
+    <dimen name="dimen_huger">25dp</dimen>
+    <dimen name="dimen_hugest">28dp</dimen>
+    <dimen name="dimen_large">32dp</dimen>
+    <dimen name="dimen_larger">36dp</dimen>
+    <dimen name="dimen_largest">40dp</dimen>
+    <dimen name="dimen_extra_large">44dp</dimen>
+    <dimen name="dimen_extra_larger">56dp</dimen>
+    <dimen name="messages_margin_small">6dp</dimen>
+    <dimen name="negative_dimen_normal">-8dp</dimen>
+    <dimen name="negative_dimen_big">-16dp</dimen>
+</resources>

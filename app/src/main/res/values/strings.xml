@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">ReditParcer</string>
+    <string name="reddit_app_id">PgzdJzLa2Yz3sg</string>
+    <string name="reddit_app_redirect_uri">http://localhost</string>
+    <string name="reddit_user_agent_string">android:com.kazimad.reditparcer:vunknown</string>
+
+    <string name="error_in_response">Error in Response</string>
+    <string name="text_created">Created : %s</string>
+    <string name="text_comments">Comments : %d</string>
+</resources>
