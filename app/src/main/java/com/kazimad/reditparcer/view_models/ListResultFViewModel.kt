@@ -37,19 +37,22 @@ class ListResultFViewModel : ViewModel() {
 //                        })
 //    }
 
-    fun callListResults() {
-        var disposable = getApiProvider().create(ApiProvider.baseUrl).getList()
+    fun callListResults(after: String? = null, limit: Int = 10) {
+        var disposable = getApiProvider().create(ApiProvider.baseUrl).getList(after, limit)
                 .filter(ApiHelper.baseApiFilterPredicate(TopResponse::class))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->
                     topLiveData.value = result.body()
                 }, { error ->
+                    error.printStackTrace()
+                    //TODO refactore, after that - fail
                     val innerError = InnerError()
                     innerError.errorMessage = error?.localizedMessage
                     innerError.throwable = error?.cause
                     errorLiveData.value = innerError
-                    error.printStackTrace()
+                    Logger.log("ListResultFViewModel errorLiveData.value ${innerError.cause}")
+                    innerError.printStackTrace()
                 })
     }
 

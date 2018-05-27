@@ -14,4 +14,7 @@ data class ChildData(
         @SerializedName("title")
         val title: String = "",
         @SerializedName("url")
-        val url: String = "")
+        val url: String = "",
+        @SerializedName("name")
+        val name: String = "")
+

@@ -12,6 +12,7 @@ import com.kazimad.reditparcer.R
 import com.kazimad.reditparcer.models.error.ResponseException
 import com.kazimad.reditparcer.tools.Logger
 import com.kazimad.reditparcer.view.fragments.ListResultFragment
+import kotlinx.android.synthetic.main.activity_main.*
 import java.net.ConnectException
 import java.util.*
 
@@ -21,17 +22,22 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        if (allPermissionsGranted()) {
-            addFragmentToStack(ListResultFragment())
-        } else {
-            getRuntimePermissions()
-        }
+        addFragmentToStack(ListResultFragment())
+
+//        if (allPermissionsGranted()) {
+//            addFragmentToStack(ListResultFragment())
+//        } else {
+//            getRuntimePermissions()
+//        }
 
     }
 
 
     fun addFragmentToStack(fragment: Fragment, tag: String? = null) {
-        supportFragmentManager.beginTransaction().add(fragment, tag).commit()
+        supportFragmentManager.beginTransaction()
+                .add(this.container.id, fragment, tag)
+                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+                .commit()
     }
 
     fun onMyError(t: Throwable?) {
@@ -114,5 +120,14 @@ class MainActivity : AppCompatActivity() {
         }
         Logger.log("Permission NOT granted: $permission")
         return false
+    }
+
+    override fun onBackPressed() {
+        val count = fragmentManager.backStackEntryCount
+        if (count == 0) {
+            super.onBackPressed()
+        } else {
+            fragmentManager.popBackStack()
+        }
     }
 }

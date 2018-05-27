@@ -11,10 +11,7 @@ import kotlin.reflect.KClass
 class ApiHelper {
 
     companion object {
-
-        private const val RESPONSE_CODE_LIMIT_REQUESTS = 429
         private const val RESPONSE_CODE_BAD_REQUESTS = HttpURLConnection.HTTP_BAD_REQUEST
-
         fun <T : Any> baseApiFilterPredicate(type: KClass<T>): Predicate<Response<T>> {
             return Predicate({
                 if (it.code() >= RESPONSE_CODE_BAD_REQUESTS) {
