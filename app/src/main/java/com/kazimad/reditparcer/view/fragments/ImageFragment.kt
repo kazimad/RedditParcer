@@ -1,5 +1,7 @@
 package com.kazimad.reditparcer.view.fragments
 
+import android.app.Activity
+import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -16,13 +18,19 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.kazimad.reditparcer.R
 import com.kazimad.reditparcer.tools.BUNDLE_PARAM
-import com.kazimad.reditparcer.tools.Logger
+import com.kazimad.reditparcer.tools.listeners.LoadImageCompleteListener
+import com.kazimad.reditparcer.view.activities.MainActivity
 import kotlinx.android.synthetic.main.fragment_image.*
 
 /**
  * Created by Kazimad on 27.05.2018.
  */
-class ImageFragment : Fragment() {
+class ImageFragment : Fragment(), LoadImageCompleteListener {
+
+
+    private lateinit var mActivity: Activity
+    private lateinit var targetUrl: String
+
     companion object {
         fun newInstance(url: String): ImageFragment {
             val result = ImageFragment()
@@ -40,15 +48,14 @@ class ImageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (arguments != null) {
-            var targetUrl = arguments!!.getString(BUNDLE_PARAM)
+            targetUrl = arguments!!.getString(BUNDLE_PARAM)
             if (targetUrl.endsWith(".gif")) {
                 Glide.with(bigImage)
                         .asGif()
                         .load(targetUrl)
                         .apply(RequestOptions()
-                                .placeholder(R.drawable.ic_place_holder)
+//                                .placeholder(R.drawable.ic_place_holder)
                                 .error(R.drawable.ic_broken_image)
-
                         )
                         .transition(DrawableTransitionOptions.withCrossFade())
                         .listener(object : RequestListener<GifDrawable> {
@@ -69,7 +76,6 @@ class ImageFragment : Fragment() {
                         .apply(RequestOptions()
 //                                .placeholder(R.drawable.ic_place_holder)
                                 .error(R.drawable.ic_broken_image)
-
                         )
                         .transition(DrawableTransitionOptions.withCrossFade())
                         .listener(object : RequestListener<Drawable> {
@@ -86,5 +92,24 @@ class ImageFragment : Fragment() {
                         .into(bigImage)
             }
         }
+        loadButton.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(p0: View?) {
+                loadButtonClick()
+            }
+        })
+    }
+
+    fun loadButtonClick() {
+        (mActivity as MainActivity).loadImage(targetUrl, this)
+        loadButton.isEnabled = false
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        mActivity = this.activity!!
+    }
+
+    override fun onImageLoaded(error: String?) {
+        loadButton.isEnabled = true
     }
 }

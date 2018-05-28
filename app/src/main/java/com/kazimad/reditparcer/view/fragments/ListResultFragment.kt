@@ -21,11 +21,8 @@ import com.kazimad.reditparcer.tools.Utils
 import com.kazimad.reditparcer.tools.listeners.EndlessRecyclerViewScrollListener
 import com.kazimad.reditparcer.view.activities.MainActivity
 import com.kazimad.reditparcer.view_models.ListResultFViewModel
+import kotlinx.android.synthetic.main.fragment_image.*
 import kotlinx.android.synthetic.main.fragment_list_result.*
-import android.support.v7.widget.LinearSnapHelper
-import android.support.v7.widget.SnapHelper
-
-
 
 
 class ListResultFragment : Fragment(), TopListAdapter.onViewSelectedListener {
@@ -116,4 +113,5 @@ class ListResultFragment : Fragment(), TopListAdapter.onViewSelectedListener {
             (mActivity as MainActivity).addFragmentToStack(ImageFragment.newInstance(url!!))
         }
     }
+
 }

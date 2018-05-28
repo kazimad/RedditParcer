@@ -2,41 +2,51 @@ package com.kazimad.reditparcer.view.activities
 
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.os.AsyncTask
 import android.os.Bundle
+import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
+import com.kazimad.reditparcer.App
 import com.kazimad.reditparcer.R
 import com.kazimad.reditparcer.models.error.ResponseException
 import com.kazimad.reditparcer.tools.Logger
+import com.kazimad.reditparcer.tools.TimeFormattingUtil
+import com.kazimad.reditparcer.tools.Utils
+import com.kazimad.reditparcer.tools.listeners.LoadImageCompleteListener
 import com.kazimad.reditparcer.view.fragments.ListResultFragment
 import kotlinx.android.synthetic.main.activity_main.*
+import java.io.IOException
 import java.net.ConnectException
+import java.net.HttpURLConnection
+import java.net.URL
 import java.util.*
+
 
 class MainActivity : AppCompatActivity() {
     private val PERMISSION_REQUESTS = 1
-
+    private lateinit var result: Bitmap
+    private var loadImageStr: String? = null
+    private var fragmentListener: LoadImageCompleteListener? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         if (savedInstanceState == null) {
             addFragmentToStack(ListResultFragment())
         }
-//        if (allPermissionsGranted()) {
-//            addFragmentToStack(ListResultFragment())
-//        } else {
-//            getRuntimePermissions()
-//        }
-
     }
 
 
     fun addFragmentToStack(fragment: Fragment, tag: String? = null) {
+        Logger.log("addFragmentToStack MainActivity ${fragment::class.java.canonicalName}")
         supportFragmentManager.beginTransaction()
-                .add(this.container.id, fragment, tag)
+                .add(this.container.id, fragment, fragment::class.java.canonicalName)
+                .addToBackStack(fragment::class.java.canonicalName)
                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                 .commit()
     }
@@ -106,10 +116,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onRequestPermissionsResult(
-            requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         if (allPermissionsGranted()) {
-            addFragmentToStack(ListResultFragment())
+            loadImage(loadImageStr!!, fragmentListener!!)
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
@@ -124,11 +133,69 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        val count = fragmentManager.backStackEntryCount
-        if (count == 0) {
-            super.onBackPressed()
+        val count = supportFragmentManager.backStackEntryCount
+        if (count == 1) {
+            finish()
         } else {
-            fragmentManager.popBackStack()
+            supportFragmentManager.popBackStack()
+        }
+    }
+
+    fun loadImage(url: String, fragmentListener: LoadImageCompleteListener) {
+        loadImageStr = url
+        this.fragmentListener = fragmentListener
+        if (allPermissionsGranted()) {
+            val bitmapFromURLAsyncTask = GetBitmapFromURLAsyncTask()
+            bitmapFromURLAsyncTask.execute(loadImageStr)
+            bitmapFromURLAsyncTask.listener = object : LoadImageCompleteListener {
+                override fun onImageLoaded(error: String?) {
+                    if (error != null) {
+                        Toast.makeText(App.instance, error, Toast.LENGTH_LONG).show()
+                    } else {
+                        Toast.makeText(App.instance, Utils.getResString(R.string.image_loaded), Toast.LENGTH_LONG).show()
+                    }
+                    loadImageStr = null
+                    fragmentListener.onImageLoaded()
+                }
+            }
+        } else {
+            getRuntimePermissions()
+        }
+
+    }
+
+    private class GetBitmapFromURLAsyncTask : AsyncTask<String, Void, Bitmap>() {
+        var listener: LoadImageCompleteListener? = null
+
+        override fun doInBackground(vararg url: String): Bitmap? {
+            return getBitmapFromURL(url[0])
+        }
+
+        override fun onPostExecute(result: Bitmap?) {
+            super.onPostExecute(result)
+            var millis = System.currentTimeMillis()
+            if (result != null) {
+                MediaStore.Images.Media.insertImage(App.instance.contentResolver, result,
+                        TimeFormattingUtil.formatDateWithPattern(millis, TimeFormattingUtil.DISPLAY_DATE_PATTERN_13),
+                        "some description")
+                listener?.onImageLoaded()
+            } else {
+                listener?.onImageLoaded(Utils.getResString(R.string.load_error))
+            }
+        }
+
+        fun getBitmapFromURL(src: String): Bitmap? {
+            return try {
+                val url = URL(src)
+                val connection = url.openConnection() as HttpURLConnection
+                connection.doInput = true
+                connection.connect()
+                val input = connection.inputStream
+                BitmapFactory.decodeStream(input)
+            } catch (e: IOException) {
+                e.printStackTrace()
+                null
+            }
         }
     }
 }

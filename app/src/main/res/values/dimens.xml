@@ -53,4 +53,8 @@
     <dimen name="messages_margin_small">6dp</dimen>
     <dimen name="negative_dimen_normal">-8dp</dimen>
     <dimen name="negative_dimen_big">-16dp</dimen>
+
+    <dimen name="button_height">48dp</dimen>
+    <dimen name="corner_radius">4dp</dimen>
+
 </resources>
