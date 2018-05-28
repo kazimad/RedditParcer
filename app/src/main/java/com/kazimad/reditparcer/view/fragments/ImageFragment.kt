@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.load.resource.gif.GifDrawable
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
@@ -47,7 +48,9 @@ class ImageFragment : Fragment() {
                         .apply(RequestOptions()
                                 .placeholder(R.drawable.ic_place_holder)
                                 .error(R.drawable.ic_broken_image)
+
                         )
+                        .transition(DrawableTransitionOptions.withCrossFade())
                         .listener(object : RequestListener<GifDrawable> {
                             override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<GifDrawable>?, isFirstResource: Boolean): Boolean {
                                 imageProgress.visibility = View.GONE
@@ -64,10 +67,11 @@ class ImageFragment : Fragment() {
                 Glide.with(bigImage.context)
                         .load(targetUrl)
                         .apply(RequestOptions()
-                                .placeholder(R.drawable.ic_place_holder)
+//                                .placeholder(R.drawable.ic_place_holder)
                                 .error(R.drawable.ic_broken_image)
 
                         )
+                        .transition(DrawableTransitionOptions.withCrossFade())
                         .listener(object : RequestListener<Drawable> {
                             override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
                                 imageProgress.visibility = View.GONE

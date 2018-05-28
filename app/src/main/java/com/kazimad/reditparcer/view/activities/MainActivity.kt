@@ -22,8 +22,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        addFragmentToStack(ListResultFragment())
-
+        if (savedInstanceState == null) {
+            addFragmentToStack(ListResultFragment())
+        }
 //        if (allPermissionsGranted()) {
 //            addFragmentToStack(ListResultFragment())
 //        } else {

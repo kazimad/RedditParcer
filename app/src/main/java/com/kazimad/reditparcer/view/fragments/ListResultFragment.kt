@@ -15,17 +15,24 @@ import android.widget.Toast.LENGTH_LONG
 import com.kazimad.reditparcer.R
 import com.kazimad.reditparcer.adapters.TopListAdapter
 import com.kazimad.reditparcer.models.inner_models.ChildItemWrapper
-import com.kazimad.reditparcer.models.response.TopResponse
+import com.kazimad.reditparcer.models.response.ChildrenItem
 import com.kazimad.reditparcer.tools.Logger
 import com.kazimad.reditparcer.tools.Utils
 import com.kazimad.reditparcer.tools.listeners.EndlessRecyclerViewScrollListener
 import com.kazimad.reditparcer.view.activities.MainActivity
 import com.kazimad.reditparcer.view_models.ListResultFViewModel
 import kotlinx.android.synthetic.main.fragment_list_result.*
+import android.support.v7.widget.LinearSnapHelper
+import android.support.v7.widget.SnapHelper
+
+
 
 
 class ListResultFragment : Fragment(), TopListAdapter.onViewSelectedListener {
 
+    companion object {
+        const val MAX_ITEMS_COUNT: Int = 50
+    }
 
     private lateinit var viewModel: ListResultFViewModel
     private lateinit var mActivity: Activity
@@ -35,23 +42,39 @@ class ListResultFragment : Fragment(), TopListAdapter.onViewSelectedListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+//        Logger.log("ListResultFragment onViewCreated ")
         workOnRecycleView()
         viewModel = ViewModelProviders.of(this).get(ListResultFViewModel::class.java)
-        viewModel.topLiveData.observe(this, Observer { onResultTopLiveData(it!!) })
+        viewModel.topLiveData.observe(this, Observer { onResultTopLiveData(it) })
         viewModel.errorLiveData.observe(this, Observer { (mActivity as MainActivity).onMyError(it) })
-        viewModel.callListResults()
+        if (!viewModel.loadedChildrenItems.isEmpty()) {
+            Logger.log("workWithDataForRecycleView 11 onViewCreated")
+
+            workWithDataForRecycleView(viewModel.loadedChildrenItems)
+            topList.scrollToPosition(viewModel.lastPosition)
+            viewModel.loadedChildrenItems.clear()
+        } else {
+            Logger.log("onLoadMore onViewCreated")
+            viewModel.callListResults()
+        }
     }
 
-    private fun onResultTopLiveData(topResponse: TopResponse) {
-        Logger.log("onResultTopLiveData last loadaed item name ${topResponse.data.children!![topResponse.data.children.lastIndex].data?.name}")
+    private fun onResultTopLiveData(modelData: ArrayList<ChildrenItem>?) {
+        Logger.log("onResultTopLiveData 11 onViewCreated")
+        workWithDataForRecycleView(modelData)
+    }
+
+    private fun workWithDataForRecycleView(modelData: ArrayList<ChildrenItem>?) {
         val toAdapterList: ArrayList<ChildItemWrapper> = ArrayList()
-        for (i in 0 until topResponse.data.children.size) {
-            toAdapterList.add(ChildItemWrapper(TopListAdapter.REGULAR_FLAG, topResponse.data.children[i]))
+        if (modelData != null) {
+            for (i in 0 until modelData.size) {
+                toAdapterList.add(ChildItemWrapper(TopListAdapter.REGULAR_FLAG, modelData[i]))
+            }
+            Logger.log("onResultTopLiveData toAdapterList.size ${toAdapterList.size}")
+            (topList.adapter as TopListAdapter).addItems(toAdapterList)
+            Logger.log("getItems().size ${(topList.adapter as TopListAdapter).getItems().size}")
+            viewModel.topLiveData.postValue(null)
         }
-        Logger.log("onResultTopLiveData toAdapterList.size ${toAdapterList.size}")
-        (topList.adapter as TopListAdapter).addItems(toAdapterList)
-        Logger.log("onResultTopLiveData size is ${(topList.adapter as TopListAdapter).getItems().size}")
     }
 
     override fun onAttach(context: Context?) {
@@ -59,13 +82,29 @@ class ListResultFragment : Fragment(), TopListAdapter.onViewSelectedListener {
         mActivity = this.activity!!
     }
 
+    override fun onPause() {
+        super.onPause()
+        viewModel.lastPosition = (topList.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+        val itemsToSave = ArrayList<ChildrenItem>()
+        for (i in 0 until (topList.adapter as TopListAdapter).getItems().size) {
+            itemsToSave.add(ChildrenItem((topList.adapter as TopListAdapter).getItems()[i].childWrappedData?.data!!))
+        }
+        viewModel.loadedChildrenItems = itemsToSave
+    }
+
+
     private fun workOnRecycleView() {
         topList.layoutManager = LinearLayoutManager(topList.context)
         topList.adapter = TopListAdapter(this)
         topList.addOnScrollListener(object : EndlessRecyclerViewScrollListener(topList.layoutManager as LinearLayoutManager) {
             override fun onLoadMore() {
-                viewModel.callListResults((topList.adapter as TopListAdapter).getItems()[(topList.adapter as TopListAdapter).getItems().lastIndex - 1].childWrappedData?.data?.name)
-                Logger.log("onLoadMore last item name ${(topList.adapter as TopListAdapter).getItems()[(topList.adapter as TopListAdapter).getItems().lastIndex - 1].childWrappedData?.data?.name}")
+                Logger.log("onLoadMore workOnRecycleView")
+                if (topList.adapter.itemCount <= MAX_ITEMS_COUNT) {
+                    viewModel.callListResults((topList.adapter as TopListAdapter).getItems()[(topList.adapter as TopListAdapter).getItems().lastIndex].childWrappedData?.data?.name)
+//                Logger.log("onLoadMore last item name ${(topList.adapter as TopListAdapter).getItems()[(topList.adapter as TopListAdapter).getItems().lastIndex].childWrappedData?.data?.name}")
+                } else {
+                    Toast.makeText(topList.context, Utils.getResString(R.string.limit_items), Toast.LENGTH_LONG).show()
+                }
             }
         })
     }

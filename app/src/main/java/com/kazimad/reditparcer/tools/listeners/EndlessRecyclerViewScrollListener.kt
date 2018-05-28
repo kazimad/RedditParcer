@@ -10,7 +10,7 @@ import android.util.Log
 abstract class EndlessRecyclerViewScrollListener(private val layoutManager: LinearLayoutManager) : RecyclerView.OnScrollListener() {
 
     private var loading = true
-    private var visibleThreshold = 1
+    private var visibleThreshold = 3
     private var visibleItemCount = 0
     private var firstVisibleItem = 0
     private var previousTotal = 0

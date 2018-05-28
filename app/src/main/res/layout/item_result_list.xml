@@ -6,41 +6,60 @@
     android:background="@color/text_white"
     android:padding="@dimen/dimen_normal">
 
-    <ImageView
-        android:id="@+id/itemImage"
-        android:layout_width="@dimen/list_image_size"
-        android:layout_height="@dimen/list_image_size"
-        android:src="@drawable/ic_place_holder"
-        tools:ignore="contentDescription" />
+    <RelativeLayout
+        android:id="@+id/mainContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/titleText"
-        style="@style/text_black"
-        android:layout_marginStart="@dimen/dimen_normal"
-        android:layout_toEndOf="@+id/itemImage"
-        android:textSize="@dimen/dimen_big" />
+        <ImageView
+            android:id="@+id/itemImage"
+            android:layout_width="@dimen/list_image_size"
+            android:layout_height="@dimen/list_image_size"
+            android:src="@drawable/ic_place_holder"
+            tools:ignore="contentDescription" />
 
-    <TextView
-        android:id="@+id/textAuthor"
-        style="@style/text_black"
-        android:layout_alignStart="@+id/titleText"
-        android:layout_below="@+id/titleText"
-        android:layout_marginTop="@dimen/dimen_normal"
-        android:layout_toEndOf="@+id/itemImage"
-        android:textSize="@dimen/text_normal"
-        android:textStyle="italic" />
+        <TextView
+            android:id="@+id/titleText"
+            style="@style/text_black"
+            android:layout_marginStart="@dimen/dimen_normal"
+            android:layout_toEndOf="@+id/itemImage"
+            android:textSize="@dimen/dimen_big" />
 
-    <TextView
-        android:id="@+id/createdAtText"
-        style="@style/text_black"
-        android:layout_alignStart="@+id/titleText"
-        android:layout_below="@+id/textAuthor"
-        android:textStyle="bold" />
+        <TextView
+            android:id="@+id/textAuthor"
+            style="@style/text_black"
+            android:layout_alignStart="@+id/titleText"
+            android:layout_below="@+id/titleText"
+            android:layout_marginTop="@dimen/dimen_normal"
+            android:layout_toEndOf="@+id/itemImage"
+            android:textSize="@dimen/text_normal"
+            android:textStyle="italic" />
 
-    <TextView
-        android:id="@+id/commentsText"
-        style="@style/text_black"
-        android:layout_alignStart="@+id/titleText"
-        android:layout_below="@+id/createdAtText"
-        android:textStyle="bold" />
+        <TextView
+            android:id="@+id/createdAtText"
+            style="@style/text_black"
+            android:layout_alignStart="@+id/titleText"
+            android:layout_below="@+id/textAuthor"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/commentsText"
+            style="@style/text_black"
+            android:layout_alignStart="@+id/titleText"
+            android:layout_below="@+id/createdAtText"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/loadingContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mainContainer"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
 </RelativeLayout>

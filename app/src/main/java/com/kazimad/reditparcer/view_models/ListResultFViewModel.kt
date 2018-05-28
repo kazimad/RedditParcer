@@ -6,6 +6,7 @@ import android.text.TextUtils
 import com.kazimad.reditparcer.extentions.getApiProvider
 import com.kazimad.reditparcer.extentions.getPrefs
 import com.kazimad.reditparcer.models.error.InnerError
+import com.kazimad.reditparcer.models.response.ChildrenItem
 import com.kazimad.reditparcer.models.response.TopResponse
 import com.kazimad.reditparcer.remote.ApiHelper
 import com.kazimad.reditparcer.remote.ApiProvider
@@ -16,12 +17,14 @@ import io.reactivex.schedulers.Schedulers
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class ListResultFViewModel : ViewModel() {
-    var topLiveData: MutableLiveData<TopResponse> = MutableLiveData()
+    var topLiveData: MutableLiveData<ArrayList<ChildrenItem>?> = MutableLiveData()
     var errorLiveData: MutableLiveData<InnerError> = MutableLiveData()
-
+    var loadedChildrenItems = ArrayList<ChildrenItem>()
+    var lastPosition: Int = 0
 //    fun callAuthorization() {
 //        var disposable = getApiProvider().create(ApiProvider.baseUrl).authorize(Utils.getResString(R.string.reddit_app_id),
 //                "token",
@@ -37,13 +40,14 @@ class ListResultFViewModel : ViewModel() {
 //                        })
 //    }
 
-    fun callListResults(after: String? = null, limit: Int = 10) {
+    fun callListResults(after: String? = null, lastVisilePosition: Int = 0, limit: Int = 10) {
+        lastPosition = lastVisilePosition
         var disposable = getApiProvider().create(ApiProvider.baseUrl).getList(after, limit)
                 .filter(ApiHelper.baseApiFilterPredicate(TopResponse::class))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->
-                    topLiveData.value = result.body()
+                    topLiveData.value = result.body()!!.data.children as ArrayList<ChildrenItem>
                 }, { error ->
                     error.printStackTrace()
                     //TODO refactore, after that - fail
