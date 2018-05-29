@@ -23,9 +23,8 @@ class TopListAdapter(var listener: onViewSelectedListener) : RecyclerView.Adapte
 
     private var topList: ArrayList<ChildItemWrapper> = ArrayList()
 
-    inner class RegularViewHolder(private var parent: ViewGroup) : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_result_list, parent, false)) {
-        fun bind(item: ChildItemWrapper, position: Int) {
-
+    inner class RegularViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_result_list, parent, false)) {
+        fun bind(item: ChildItemWrapper) {
 
             if (item.childWrappedData!!.data.thumbnail.endsWith(".gif") || item.childWrappedData!!.data.thumbnail.endsWith(".gifv")) {
                 var fixedGif = item.childWrappedData!!.data.thumbnail
@@ -72,7 +71,7 @@ class TopListAdapter(var listener: onViewSelectedListener) : RecyclerView.Adapte
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as RegularViewHolder).bind(getItems()[position], position)
+        (holder as RegularViewHolder).bind(getItems()[position])
     }
 
     override fun getItemCount() = topList.size
