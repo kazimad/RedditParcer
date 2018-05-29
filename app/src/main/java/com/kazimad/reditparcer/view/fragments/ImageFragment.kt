@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.load.resource.gif.GifDrawable
@@ -18,6 +19,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.kazimad.reditparcer.R
 import com.kazimad.reditparcer.tools.BUNDLE_PARAM
+import com.kazimad.reditparcer.tools.Logger
 import com.kazimad.reditparcer.tools.listeners.LoadImageCompleteListener
 import com.kazimad.reditparcer.view.activities.MainActivity
 import kotlinx.android.synthetic.main.fragment_image.*
@@ -48,23 +50,34 @@ class ImageFragment : Fragment(), LoadImageCompleteListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (arguments != null) {
+            var fixedGif = ""
             targetUrl = arguments!!.getString(BUNDLE_PARAM)
-            if (targetUrl.endsWith(".gif")) {
+
+            if (targetUrl.endsWith(".gif") || targetUrl.endsWith(".gifv")) {
+                var fixedGif = targetUrl
+                if (fixedGif.endsWith(".gifv")) {
+                    fixedGif = targetUrl.replace(".gifv", ".gif")
+                }
+                Logger.log(".gifv ImageFragment targetUrl is ${fixedGif}")
                 Glide.with(bigImage)
                         .asGif()
-                        .load(targetUrl)
+                        .load(fixedGif)
                         .apply(RequestOptions()
 //                                .placeholder(R.drawable.ic_place_holder)
                                 .error(R.drawable.ic_broken_image)
+                                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                         )
                         .transition(DrawableTransitionOptions.withCrossFade())
                         .listener(object : RequestListener<GifDrawable> {
                             override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<GifDrawable>?, isFirstResource: Boolean): Boolean {
                                 imageProgress.visibility = View.GONE
+                                loadButton.isEnabled = false
                                 return false
                             }
 
                             override fun onResourceReady(resource: GifDrawable?, model: Any?, target: Target<GifDrawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                                loadButton.isEnabled = true
+
                                 imageProgress.visibility = View.GONE
                                 return false
                             }
@@ -81,11 +94,13 @@ class ImageFragment : Fragment(), LoadImageCompleteListener {
                         .listener(object : RequestListener<Drawable> {
                             override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
                                 imageProgress.visibility = View.GONE
+                                loadButton.isEnabled = false
                                 return false
                             }
 
                             override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
                                 imageProgress.visibility = View.GONE
+                                loadButton.isEnabled = true
                                 return false
                             }
                         })

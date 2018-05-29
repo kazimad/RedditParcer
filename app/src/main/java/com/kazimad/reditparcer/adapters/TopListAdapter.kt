@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.kazimad.reditparcer.R
@@ -24,13 +25,21 @@ class TopListAdapter(var listener: onViewSelectedListener) : RecyclerView.Adapte
 
     inner class RegularViewHolder(private var parent: ViewGroup) : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_result_list, parent, false)) {
         fun bind(item: ChildItemWrapper, position: Int) {
-            if (item.childWrappedData!!.data.thumbnail.endsWith(".gif")) {
+
+
+            if (item.childWrappedData!!.data.thumbnail.endsWith(".gif") || item.childWrappedData!!.data.thumbnail.endsWith(".gifv")) {
+                var fixedGif = item.childWrappedData!!.data.thumbnail
+                if (fixedGif.endsWith(".gifv")) {
+                    fixedGif = item.childWrappedData!!.data.thumbnail.replace(".gifv", ".gif")
+                }
                 Glide.with(itemView.itemImage.context)
                         .asGif()
-                        .load(item.childWrappedData!!.data.thumbnail)
+                        .load(fixedGif)
                         .apply(RequestOptions()
                                 .placeholder(R.drawable.ic_place_holder)
                                 .error(R.drawable.ic_broken_image)
+                                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+
                         )
                         .transition(DrawableTransitionOptions.withCrossFade())
                         .into(itemView.itemImage)
@@ -78,7 +87,7 @@ class TopListAdapter(var listener: onViewSelectedListener) : RecyclerView.Adapte
             topList[initPosition].flag = REGULAR_FLAG
         }
         topList.addAll(items)
-        if (topList.lastIndex < ListResultFragment.MAX_ITEMS_COUNT-1) {
+        if (topList.lastIndex < ListResultFragment.MAX_ITEMS_COUNT - 1) {
             topList[topList.lastIndex].flag = LOADING_FLAG
         }
         notifyDataSetChanged()

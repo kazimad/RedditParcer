@@ -185,17 +185,19 @@ class MainActivity : AppCompatActivity() {
         }
 
         fun getBitmapFromURL(src: String): Bitmap? {
-            return try {
+//            try {
                 val url = URL(src)
+                Logger.log("getBitmapFromURL url $url")
                 val connection = url.openConnection() as HttpURLConnection
                 connection.doInput = true
                 connection.connect()
                 val input = connection.inputStream
-                BitmapFactory.decodeStream(input)
-            } catch (e: IOException) {
-                e.printStackTrace()
-                null
-            }
+                return BitmapFactory.decodeStream(input)
+//            } catch (e: IOException) {
+//                e.printStackTrace()
+//                Logger.log("error is ${e.message}")
+//                return null
+//            }
         }
     }
 }

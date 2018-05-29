@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/semi_transparent">
+    android:background="@color/semi_transparent"
+    android:clickable="true"
+    android:focusable="true">
 
     <ProgressBar
         android:id="@+id/imageProgress"
@@ -12,6 +14,7 @@
         android:layout_centerInParent="true" />
 
     <Button
+        android:enabled="false"
         android:id="@+id/loadButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/button_height"
