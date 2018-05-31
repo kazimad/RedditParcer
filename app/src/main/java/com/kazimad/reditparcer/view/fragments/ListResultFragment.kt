@@ -13,11 +13,11 @@ import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import com.kazimad.reditparcer.R
 import com.kazimad.reditparcer.adapters.TopListAdapter
+import com.kazimad.reditparcer.interfaces.listeners.EndlessRecyclerViewScrollListener
 import com.kazimad.reditparcer.models.inner_models.ChildItemWrapper
 import com.kazimad.reditparcer.models.response.ChildrenItem
 import com.kazimad.reditparcer.tools.Logger
 import com.kazimad.reditparcer.tools.Utils
-import com.kazimad.reditparcer.interfaces.listeners.EndlessRecyclerViewScrollListener
 import com.kazimad.reditparcer.view.activities.MainActivity
 import com.kazimad.reditparcer.view_models.ListResultFViewModel
 import kotlinx.android.synthetic.main.fragment_list_result.*
@@ -93,10 +93,8 @@ class ListResultFragment : BaseFragment(), TopListAdapter.onViewSelectedListener
         topList.adapter = TopListAdapter(this)
         topList.addOnScrollListener(object : EndlessRecyclerViewScrollListener(topList.layoutManager as LinearLayoutManager) {
             override fun onLoadMore() {
-                Logger.log("onLoadMore workOnRecycleView")
                 if (topList.adapter.itemCount <= MAX_ITEMS_COUNT) {
                     viewModel.callListResults((topList.adapter as TopListAdapter).getItems()[(topList.adapter as TopListAdapter).getItems().lastIndex].childWrappedData?.data?.name)
-//                Logger.log("onLoadMore last item name ${(topList.adapter as TopListAdapter).getItems()[(topList.adapter as TopListAdapter).getItems().lastIndex].childWrappedData?.data?.name}")
                 } else {
                     Toast.makeText(topList.context, Utils.getResString(R.string.limit_items), Toast.LENGTH_LONG).show()
                 }
@@ -105,11 +103,13 @@ class ListResultFragment : BaseFragment(), TopListAdapter.onViewSelectedListener
     }
 
     override fun onItemSelected(url: String?) {
-        if (url.isNullOrEmpty()) {
-            Toast.makeText(topList.context, Utils.getResString(R.string.error_no_image), LENGTH_LONG).show()
-        } else {
+        if (!url.isNullOrEmpty() || url!!.toLowerCase().endsWith(".png")
+                || url.toLowerCase().endsWith(".jpeg") || url.toLowerCase().endsWith(".jpg")
+                || url.toLowerCase().endsWith(".gif") || url.toLowerCase().endsWith(".gifv")
+                || url.toLowerCase().endsWith(".bmp") || url.toLowerCase().endsWith(".webp")) {
             (mActivity as MainActivity).addFragmentToStack(ImageFragment.newInstance(url!!))
+        } else {
+            Toast.makeText(topList.context, Utils.getResString(R.string.error_no_image), LENGTH_LONG).show()
         }
     }
-
 }

@@ -11,7 +11,7 @@ class TimeFormattingUtil {
         const val SERVER_RESPONSE_DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
         const val SERVER_TIME_PATTERN = "HH:mm:ss"
         const val DISPLAY_DATE_PATTERN_13 = "dd.MM"
-        const val DISPLAY_TIME_DATE_PATTERN_1 = "HH:mm:ss-MM/dd/yyyy"
+        const val DISPLAY_TIME_DATE_PATTERN_1 = "HH:mm:ss-MM.dd.yyyy"
 
         fun formatDateWithPattern(millis: Long, pattern: String): String {
             return DateTimeFormat.forPattern(pattern).withLocale(Locale.getDefault())
