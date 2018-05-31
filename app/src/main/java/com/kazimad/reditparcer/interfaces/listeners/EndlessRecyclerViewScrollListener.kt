@@ -1,4 +1,4 @@
-package com.kazimad.reditparcer.tools.listeners
+package com.kazimad.reditparcer.interfaces.listeners
 
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView

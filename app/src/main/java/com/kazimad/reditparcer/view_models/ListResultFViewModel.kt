@@ -50,13 +50,11 @@ class ListResultFViewModel : ViewModel() {
                     topLiveData.value = result.body()!!.data.children as ArrayList<ChildrenItem>
                 }, { error ->
                     error.printStackTrace()
-                    //TODO refactore, after that - fail
                     val innerError = InnerError()
                     innerError.errorMessage = error?.localizedMessage
                     innerError.throwable = error?.cause
                     errorLiveData.value = innerError
                     Logger.log("ListResultFViewModel errorLiveData.value ${innerError.cause}")
-                    innerError.printStackTrace()
                 })
     }
 

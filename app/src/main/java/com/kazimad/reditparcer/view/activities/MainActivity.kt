@@ -14,14 +14,15 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import com.kazimad.reditparcer.App
 import com.kazimad.reditparcer.R
+import com.kazimad.reditparcer.interfaces.listeners.LoadImageCompleteListener
+import com.kazimad.reditparcer.models.error.InnerError
 import com.kazimad.reditparcer.models.error.ResponseException
 import com.kazimad.reditparcer.tools.Logger
 import com.kazimad.reditparcer.tools.TimeFormattingUtil
 import com.kazimad.reditparcer.tools.Utils
-import com.kazimad.reditparcer.tools.listeners.LoadImageCompleteListener
 import com.kazimad.reditparcer.view.fragments.ListResultFragment
 import kotlinx.android.synthetic.main.activity_main.*
-import java.io.IOException
+import java.io.*
 import java.net.ConnectException
 import java.net.HttpURLConnection
 import java.net.URL
@@ -30,8 +31,7 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private val PERMISSION_REQUESTS = 1
-    private lateinit var result: Bitmap
-    private var loadImageStr: String? = null
+    private var loadImageBitmap: Bitmap? = null
     private var fragmentListener: LoadImageCompleteListener? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,9 +63,8 @@ class MainActivity : AppCompatActivity() {
                     finish()
                 }
                 else -> {
-                    Logger.log("ErrorObserver else ${t.javaClass.canonicalName}")
                     (t).printStackTrace()
-                    showError(t.message)
+                    showError((t as InnerError).errorMessage)
                     finish()
                 }
             }
@@ -118,7 +117,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         if (allPermissionsGranted()) {
-            loadImage(loadImageStr!!, fragmentListener!!)
+            saveImage(loadImageBitmap!!, fragmentListener!!)
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
@@ -141,63 +140,139 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun loadImage(url: String, fragmentListener: LoadImageCompleteListener) {
-        loadImageStr = url
-        this.fragmentListener = fragmentListener
+    fun saveImage(image: Bitmap, listener: LoadImageCompleteListener) {
+        loadImageBitmap = image
+        fragmentListener = listener
         if (allPermissionsGranted()) {
-            val bitmapFromURLAsyncTask = GetBitmapFromURLAsyncTask()
-            bitmapFromURLAsyncTask.execute(loadImageStr)
-            bitmapFromURLAsyncTask.listener = object : LoadImageCompleteListener {
-                override fun onImageLoaded(error: String?) {
-                    if (error != null) {
-                        Toast.makeText(App.instance, error, Toast.LENGTH_LONG).show()
-                    } else {
-                        Toast.makeText(App.instance, Utils.getResString(R.string.image_loaded), Toast.LENGTH_LONG).show()
-                    }
-                    loadImageStr = null
-                    fragmentListener.onImageLoaded()
-                }
+            try {
+                var millis = System.currentTimeMillis()
+                MediaStore.Images.Media.insertImage(App.instance.contentResolver, image,
+                        TimeFormattingUtil.formatDateWithPattern(millis, TimeFormattingUtil.DISPLAY_DATE_PATTERN_13),
+                        "some description")
+                fragmentListener!!.onImageLoaded()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                fragmentListener!!.onImageLoaded(e.localizedMessage)
             }
+            loadImageBitmap = null
+//            fragmentListener = null
         } else {
             getRuntimePermissions()
         }
-
     }
 
-    private class GetBitmapFromURLAsyncTask : AsyncTask<String, Void, Bitmap>() {
-        var listener: LoadImageCompleteListener? = null
 
-        override fun doInBackground(vararg url: String): Bitmap? {
-            return getBitmapFromURL(url[0])
-        }
-
-        override fun onPostExecute(result: Bitmap?) {
-            super.onPostExecute(result)
-            var millis = System.currentTimeMillis()
-            if (result != null) {
-                MediaStore.Images.Media.insertImage(App.instance.contentResolver, result,
-                        TimeFormattingUtil.formatDateWithPattern(millis, TimeFormattingUtil.DISPLAY_DATE_PATTERN_13),
-                        "some description")
-                listener?.onImageLoaded()
-            } else {
-                listener?.onImageLoaded(Utils.getResString(R.string.load_error))
-            }
-        }
-
-        fun getBitmapFromURL(src: String): Bitmap? {
+//    private class GetBitmapFromURLAsyncTask : AsyncTask<String, Void, Bitmap>() {
+//        var listener: LoadImageCompleteListener? = null
+//
+//        override fun doInBackground(vararg url: String): Bitmap? {
+//            return getBitmapFromURL(url[0])
+//        }
+//
+//        override fun onPostExecute(result: Bitmap?) {
+//            super.onPostExecute(result)
+//            var millis = System.currentTimeMillis()
+//            if (result != null) {
+//                MediaStore.Images.Media.insertImage(App.instance.contentResolver, result,
+//                        TimeFormattingUtil.formatDateWithPattern(millis, TimeFormattingUtil.DISPLAY_DATE_PATTERN_13),
+//                        "some description")
+//                listener?.onImageLoaded()
+//            } else {
+//                listener?.onImageLoaded(Utils.getResString(R.string.load_error))
+//            }
+//        }
+//
+//        fun getBitmapFromURL(src: String): Bitmap? {
 //            try {
-                val url = URL(src)
-                Logger.log("getBitmapFromURL url $url")
-                val connection = url.openConnection() as HttpURLConnection
-                connection.doInput = true
-                connection.connect()
-                val input = connection.inputStream
-                return BitmapFactory.decodeStream(input)
+//                val url = URL(src)
+//                Logger.log("getBitmapFromURL url $url")
+//                val connection = url.openConnection() as HttpURLConnection
+//                connection.doInput = true
+//                connection.connect()
+//                val input = connection.inputStream
+//                return BitmapFactory.decodeStream(input)
 //            } catch (e: IOException) {
 //                e.printStackTrace()
 //                Logger.log("error is ${e.message}")
 //                return null
 //            }
-        }
-    }
+//        }
+//    }
+
+//    private class GetFigFromURLAsyncTask : AsyncTask<String, Void, Bitmap>() {
+//        var listener: LoadImageCompleteListener? = null
+//
+//        override fun doInBackground(vararg url: String): Bitmap? {
+//            return downloadFile(url[0])
+//        }
+//
+//        override fun onPostExecute(result: Bitmap?) {
+//            super.onPostExecute(result)
+//            var millis = System.currentTimeMillis()
+//            if (result != null) {
+//                MediaStore.Images.Media.insertImage(App.instance.contentResolver, result,
+//                        TimeFormattingUtil.formatDateWithPattern(millis, TimeFormattingUtil.DISPLAY_DATE_PATTERN_13),
+//                        "some description")
+//                listener?.onImageLoaded()
+//            } else {
+//                listener?.onImageLoaded(Utils.getResString(R.string.load_error))
+//            }
+//        }
+//
+//        fun getBitmapFromURL(src: String): Bitmap? {
+//            try {
+//                val url = URL(src)
+//                Logger.log("getBitmapFromURL url $url")
+//                val connection = url.openConnection() as HttpURLConnection
+//                connection.doInput = true
+//                connection.connect()
+//                val input = connection.inputStream
+//                return BitmapFactory.decodeStream(input)
+//            } catch (e: IOException) {
+//                e.printStackTrace()
+//                Logger.log("error is ${e.message}")
+//                return null
+//            }
+//        }
+//
+//        fun downloadFile(context: Context, url: String?): String? {
+//            if (url != null) {
+//                try {
+//                    val newPathFile = getNewPathFile(context)
+//
+//                    val urlConnection = URL(url).openConnection()
+//
+//                    val input = BufferedInputStream(urlConnection.getInputStream())
+//                    val output = BufferedOutputStream(FileOutputStream(newPathFile))
+//
+//                    var i = 0
+//                    while (i != -1) {
+//                        output.write(i)
+//                        i = input.read()
+//                    }
+//
+//                    input.close()
+//                    output.flush()
+//                    output.close()
+//                    return newPathFile
+//
+//                } catch (e: IOException) {
+//                    e.printStackTrace()
+//                }
+//
+//            }
+//            return null
+//
+//        }
+//
+//        fun getNewPathFile(context: Context?): String? {
+//            var file: File? = null
+//            var millis = System.currentTimeMillis()
+//            file = if (context != null)
+//                File(context.filesDir, TimeFormattingUtil.formatDateWithPattern(millis, TimeFormattingUtil.DISPLAY_DATE_PATTERN_13) + ".gif")
+//            else
+//                File(Environment.getExternalStorageDirectory().toString() + TimeFormattingUtil.formatDateWithPattern(millis, TimeFormattingUtil.DISPLAY_DATE_PATTERN_13) + ".gif")
+//            return file.path
+//        }
+//    }
 }

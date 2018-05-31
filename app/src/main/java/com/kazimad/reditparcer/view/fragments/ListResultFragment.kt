@@ -5,7 +5,6 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -18,14 +17,13 @@ import com.kazimad.reditparcer.models.inner_models.ChildItemWrapper
 import com.kazimad.reditparcer.models.response.ChildrenItem
 import com.kazimad.reditparcer.tools.Logger
 import com.kazimad.reditparcer.tools.Utils
-import com.kazimad.reditparcer.tools.listeners.EndlessRecyclerViewScrollListener
+import com.kazimad.reditparcer.interfaces.listeners.EndlessRecyclerViewScrollListener
 import com.kazimad.reditparcer.view.activities.MainActivity
 import com.kazimad.reditparcer.view_models.ListResultFViewModel
-import kotlinx.android.synthetic.main.fragment_image.*
 import kotlinx.android.synthetic.main.fragment_list_result.*
 
 
-class ListResultFragment : Fragment(), TopListAdapter.onViewSelectedListener {
+class ListResultFragment : BaseFragment(), TopListAdapter.onViewSelectedListener {
 
     companion object {
         const val MAX_ITEMS_COUNT: Int = 50
