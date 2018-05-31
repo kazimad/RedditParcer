@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -19,23 +18,22 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.kazimad.reditparcer.R
-import com.kazimad.reditparcer.interfaces.listeners.LoadImageCompleteListener
 import com.kazimad.reditparcer.tools.BUNDLE_PARAM
 import com.kazimad.reditparcer.tools.Logger
-import com.kazimad.reditparcer.tools.Utils
 import com.kazimad.reditparcer.view.activities.MainActivity
 import kotlinx.android.synthetic.main.fragment_image.*
 
 /**
  * Created by Kazimad on 27.05.2018.
  */
-class ImageFragment : BaseFragment(), LoadImageCompleteListener {
+class ImageFragment : BaseFragment() {
 
 
     private lateinit var mActivity: Activity
     private lateinit var targetUrl: String
     //    private var imageCashed = false
     private var cashedBitmap: Bitmap? = null
+    private var cashedGif: GifDrawable? = null
 
     companion object {
         fun newInstance(url: String): ImageFragment {
@@ -81,6 +79,7 @@ class ImageFragment : BaseFragment(), LoadImageCompleteListener {
                             override fun onResourceReady(resource: GifDrawable?, model: Any?, target: Target<GifDrawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
                                 loadButton.isEnabled = true
                                 imageProgress.visibility = View.GONE
+                                cashedGif = resource
                                 return false
                             }
                         })
@@ -113,17 +112,22 @@ class ImageFragment : BaseFragment(), LoadImageCompleteListener {
         }
         loadButton.setOnClickListener(object : View.OnClickListener {
             override fun onClick(p0: View?) {
-                loadButtonClick()
+                Thread(Runnable { loadButtonClick() }).start()
+
             }
         })
     }
 
     fun loadButtonClick() {
         if (cashedBitmap != null) {
-            imageProgress.visibility = View.VISIBLE
-            (mActivity as MainActivity).saveImage(cashedBitmap!!, this)
-            loadButton.isEnabled = false
-            imageProgress.visibility = View.GONE
+            (mActivity as MainActivity).saveImage(cashedBitmap!!)
+//            loadButton.isEnabled = false
+//            imageProgress.visibility = View.GONE
+        }
+        Logger.log("ImageFragment loadButtonClick")
+
+        if (cashedGif != null) {
+            (mActivity as MainActivity).saveGif(cashedGif!!)
         }
     }
 
@@ -132,10 +136,10 @@ class ImageFragment : BaseFragment(), LoadImageCompleteListener {
         mActivity = this.activity!!
     }
 
-    override fun onImageLoaded(error: String?) {
-        loadButton.isEnabled = true
-        Toast.makeText(imageProgress.context, Utils.getResString(R.string.image_loaded), Toast.LENGTH_LONG).show()
-        Logger.log("ImageFragemnt onImageLoaded ")
-
-    }
+//    override fun onImageLoaded(error: String?) {
+//        loadButton.isEnabled = true
+//        Toast.makeText(imageProgress.context, Utils.getResString(R.string.image_loaded), Toast.LENGTH_LONG).show()
+//        Logger.log("ImageFragemnt onImageLoaded ")
+//
+//    }
 }

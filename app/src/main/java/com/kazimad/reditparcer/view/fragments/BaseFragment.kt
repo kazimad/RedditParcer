@@ -38,7 +38,7 @@ abstract class BaseFragment : Fragment() {
         try {
             var millis = System.currentTimeMillis()
             MediaStore.Images.Media.insertImage(App.instance.contentResolver, image,
-                    TimeFormattingUtil.formatDateWithPattern(millis, TimeFormattingUtil.DISPLAY_DATE_PATTERN_13),
+                    TimeFormattingUtil.formatDateWithPattern(millis, TimeFormattingUtil.DISPLAY_TIME_DATE_PATTERN_1),
                     "some description")
             listener.onImageLoaded()
 
