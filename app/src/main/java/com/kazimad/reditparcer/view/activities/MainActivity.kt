@@ -180,11 +180,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun createFile(): File {
         val millis = System.currentTimeMillis()
-//        val file = File(App.instance.externalCacheDir.toString() + File.separator + TimeFormattingUtil.formatDateWithPattern(millis, TimeFormattingUtil.DISPLAY_TIME_DATE_PATTERN_1) + ".gif")
         val file = File(Environment.getExternalStorageDirectory().toString() + File.separator + TimeFormattingUtil.formatDateWithPattern(millis, TimeFormattingUtil.DISPLAY_TIME_DATE_PATTERN_1) + ".gif")
         file.createNewFile()
-        Logger.log("createFile file.path is ${file.path}")
-        Logger.log("createFile file.path is ${file.name}")
         return file
     }
 }
