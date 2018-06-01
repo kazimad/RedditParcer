@@ -92,8 +92,6 @@ class TopListAdapter(var listener: onViewSelectedListener) : RecyclerView.Adapte
         notifyDataSetChanged()
     }
 
-    private fun getLastPosition() = if (topList.lastIndex == -1) 0 else topList.lastIndex
-
     interface onViewSelectedListener {
         fun onItemSelected(url: String?)
     }

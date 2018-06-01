@@ -7,7 +7,7 @@ import retrofit2.Response
 import retrofit2.http.*
 
 interface ApiInterface {
-
+//TODO clean
 
     @POST("/api/v1/access_token")
     fun authorize(@Path("client_id") clientId: String,

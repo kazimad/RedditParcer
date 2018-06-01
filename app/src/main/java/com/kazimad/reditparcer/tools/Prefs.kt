@@ -4,6 +4,7 @@ import android.content.Context
 import com.kazimad.reditparcer.BuildConfig
 
 class Prefs(context: Context) {
+    //TODO delete class
     private val mContext: Context = context
     private val PREF_NAME = BuildConfig.APPLICATION_ID + ".prefs"
 

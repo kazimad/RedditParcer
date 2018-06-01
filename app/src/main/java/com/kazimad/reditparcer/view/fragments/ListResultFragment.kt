@@ -5,6 +5,7 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -23,7 +24,7 @@ import com.kazimad.reditparcer.view_models.ListResultFViewModel
 import kotlinx.android.synthetic.main.fragment_list_result.*
 
 
-class ListResultFragment : BaseFragment(), TopListAdapter.onViewSelectedListener {
+class ListResultFragment : Fragment(), TopListAdapter.onViewSelectedListener {
 
     companion object {
         const val MAX_ITEMS_COUNT: Int = 50
@@ -37,25 +38,21 @@ class ListResultFragment : BaseFragment(), TopListAdapter.onViewSelectedListener
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        Logger.log("ListResultFragment onViewCreated ")
         workOnRecycleView()
         viewModel = ViewModelProviders.of(this).get(ListResultFViewModel::class.java)
         viewModel.topLiveData.observe(this, Observer { onResultTopLiveData(it) })
         viewModel.errorLiveData.observe(this, Observer { (mActivity as MainActivity).onMyError(it) })
         if (!viewModel.loadedChildrenItems.isEmpty()) {
-            Logger.log("workWithDataForRecycleView 11 onViewCreated")
 
             workWithDataForRecycleView(viewModel.loadedChildrenItems)
             topList.scrollToPosition(viewModel.lastPosition)
             viewModel.loadedChildrenItems.clear()
         } else {
-            Logger.log("onLoadMore onViewCreated")
             viewModel.callListResults()
         }
     }
 
     private fun onResultTopLiveData(modelData: ArrayList<ChildrenItem>?) {
-        Logger.log("onResultTopLiveData 11 onViewCreated")
         workWithDataForRecycleView(modelData)
     }
 
@@ -65,9 +62,7 @@ class ListResultFragment : BaseFragment(), TopListAdapter.onViewSelectedListener
             for (i in 0 until modelData.size) {
                 toAdapterList.add(ChildItemWrapper(TopListAdapter.REGULAR_FLAG, modelData[i]))
             }
-            Logger.log("onResultTopLiveData toAdapterList.size ${toAdapterList.size}")
             (topList.adapter as TopListAdapter).addItems(toAdapterList)
-            Logger.log("getItems().size ${(topList.adapter as TopListAdapter).getItems().size}")
             viewModel.topLiveData.postValue(null)
         }
     }

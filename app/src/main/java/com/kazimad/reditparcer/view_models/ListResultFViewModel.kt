@@ -25,6 +25,7 @@ class ListResultFViewModel : ViewModel() {
     var errorLiveData: MutableLiveData<InnerError> = MutableLiveData()
     var loadedChildrenItems = ArrayList<ChildrenItem>()
     var lastPosition: Int = 0
+    //TODO clean
 //    fun callAuthorization() {
 //        var disposable = getApiProvider().create(ApiProvider.baseUrl).authorize(Utils.getResString(R.string.reddit_app_id),
 //                "token",

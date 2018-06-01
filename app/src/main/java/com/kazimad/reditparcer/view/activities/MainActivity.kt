@@ -41,7 +41,6 @@ class MainActivity : AppCompatActivity() {
 
 
     fun addFragmentToStack(fragment: Fragment, tag: String? = null) {
-        Logger.log("addFragmentToStack MainActivity ${fragment::class.java.canonicalName}")
         supportFragmentManager.beginTransaction()
                 .add(this.container.id, fragment, fragment::class.java.canonicalName)
                 .addToBackStack(fragment::class.java.canonicalName)

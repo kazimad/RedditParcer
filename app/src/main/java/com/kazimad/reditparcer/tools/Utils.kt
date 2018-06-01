@@ -15,9 +15,10 @@ import java.util.*
  */
 class Utils {
     companion object {
-        fun dipToPx(context: Context, dp: Int): Int {
-            return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), context.getResources().getDisplayMetrics()).toInt()
-        }
+        //TODO clean
+//        fun dipToPx(context: Context, dp: Int): Int {
+//            return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), context.getResources().getDisplayMetrics()).toInt()
+//        }
 
         fun getResString(resId: Int, vararg formatArgs: Any): String {
             try {
@@ -38,24 +39,24 @@ class Utils {
             return ""
         }
 
-        fun getScreenWidth(): Int {
-            val displayMetrics = DisplayMetrics()
-            val windowManager = App.instance.applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-            windowManager.defaultDisplay.getMetrics(displayMetrics)
-            return displayMetrics.widthPixels
-        }
-
-        fun generateRandomString(): String {
-            val SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
-            val salt = StringBuilder()
-            val rnd = Random()
-            while (salt.length < 10) { // length of the random string.
-                val index = (rnd.nextFloat() * SALTCHARS.length).toInt()
-                salt.append(SALTCHARS[index])
-            }
-            return salt.toString()
-
-        }
+//        fun getScreenWidth(): Int {
+//            val displayMetrics = DisplayMetrics()
+//            val windowManager = App.instance.applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+//            windowManager.defaultDisplay.getMetrics(displayMetrics)
+//            return displayMetrics.widthPixels
+//        }
+//
+//        fun generateRandomString(): String {
+//            val SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+//            val salt = StringBuilder()
+//            val rnd = Random()
+//            while (salt.length < 10) { // length of the random string.
+//                val index = (rnd.nextFloat() * SALTCHARS.length).toInt()
+//                salt.append(SALTCHARS[index])
+//            }
+//            return salt.toString()
+//
+//        }
 
         fun getFriendlyTime(timestamp: Long): String {
             val dateTime = Date(timestamp * 1000)

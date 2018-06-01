@@ -13,11 +13,7 @@ import java.util.concurrent.TimeUnit
 class ApiProvider() {
     companion object {
         const val baseUrl = "https://www.reddit.com/"
-//        const val authUrl = "https://www.reddit.com/"
     }
-//  init {
-//      create(url)
-//  }
 
 
     fun create(url: String): ApiInterface {

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,19 +20,17 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.kazimad.reditparcer.R
 import com.kazimad.reditparcer.tools.BUNDLE_PARAM
-import com.kazimad.reditparcer.tools.Logger
 import com.kazimad.reditparcer.view.activities.MainActivity
 import kotlinx.android.synthetic.main.fragment_image.*
 
 /**
  * Created by Kazimad on 27.05.2018.
  */
-class ImageFragment : BaseFragment() {
+class ImageFragment : Fragment() {
 
 
     private lateinit var mActivity: Activity
     private lateinit var targetUrl: String
-    //    private var imageCashed = false
     private var cashedBitmap: Bitmap? = null
     private var cashedGif: GifDrawable? = null
 
@@ -60,7 +59,6 @@ class ImageFragment : BaseFragment() {
                 if (fixedGif.endsWith(".gifv")) {
                     fixedGif = targetUrl.replace(".gifv", ".gif")
                 }
-                Logger.log(".gifv ImageFragment targetUrl is ${fixedGif}")
                 Glide.with(bigImage)
                         .asGif()
                         .load(fixedGif)
@@ -84,7 +82,6 @@ class ImageFragment : BaseFragment() {
                             }
                         })
                         .into(bigImage)
-
             } else {
                 Glide.with(bigImage.context)
                         .asBitmap()
@@ -121,11 +118,7 @@ class ImageFragment : BaseFragment() {
     fun loadButtonClick() {
         if (cashedBitmap != null) {
             (mActivity as MainActivity).saveImage(cashedBitmap!!)
-//            loadButton.isEnabled = false
-//            imageProgress.visibility = View.GONE
         }
-        Logger.log("ImageFragment loadButtonClick")
-
         if (cashedGif != null) {
             (mActivity as MainActivity).saveGif(cashedGif!!)
         }
@@ -135,11 +128,4 @@ class ImageFragment : BaseFragment() {
         super.onAttach(context)
         mActivity = this.activity!!
     }
-
-//    override fun onImageLoaded(error: String?) {
-//        loadButton.isEnabled = true
-//        Toast.makeText(imageProgress.context, Utils.getResString(R.string.image_loaded), Toast.LENGTH_LONG).show()
-//        Logger.log("ImageFragemnt onImageLoaded ")
-//
-//    }
 }
