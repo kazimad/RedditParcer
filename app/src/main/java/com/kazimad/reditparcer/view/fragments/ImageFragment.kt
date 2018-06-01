@@ -109,8 +109,8 @@ class ImageFragment : Fragment() {
         }
         loadButton.setOnClickListener(object : View.OnClickListener {
             override fun onClick(p0: View?) {
+                // had done like in telegram, with out callback
                 Thread(Runnable { loadButtonClick() }).start()
-
             }
         })
     }

@@ -13,26 +13,13 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true" />
 
-    <!--<ScrollView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_alignParentEnd="true"-->
-        <!--android:layout_centerVertical="true">-->
+    <ImageView
+        android:id="@+id/bigImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        tools:ignore="contentDescription" />
 
-        <!--<RelativeLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent">-->
-
-
-            <ImageView
-                android:id="@+id/bigImage"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                tools:ignore="contentDescription" />
-
-        <!--</RelativeLayout>-->
-    <!--</ScrollView>-->
     <Button
         android:id="@+id/loadButton"
         android:layout_width="match_parent"

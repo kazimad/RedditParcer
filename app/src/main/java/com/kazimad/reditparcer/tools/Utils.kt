@@ -1,12 +1,8 @@
 package com.kazimad.reditparcer.tools
 
-import android.content.Context
 import android.content.res.Resources
-import android.util.DisplayMetrics
-import android.util.TypedValue
-import android.view.WindowManager
 import com.kazimad.reditparcer.App
-import java.sql.Timestamp
+import com.kazimad.reditparcer.R
 import java.util.*
 
 
@@ -15,10 +11,6 @@ import java.util.*
  */
 class Utils {
     companion object {
-        //TODO clean
-//        fun dipToPx(context: Context, dp: Int): Int {
-//            return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), context.getResources().getDisplayMetrics()).toInt()
-//        }
 
         fun getResString(resId: Int, vararg formatArgs: Any): String {
             try {
@@ -38,25 +30,6 @@ class Utils {
             }
             return ""
         }
-
-//        fun getScreenWidth(): Int {
-//            val displayMetrics = DisplayMetrics()
-//            val windowManager = App.instance.applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-//            windowManager.defaultDisplay.getMetrics(displayMetrics)
-//            return displayMetrics.widthPixels
-//        }
-//
-//        fun generateRandomString(): String {
-//            val SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
-//            val salt = StringBuilder()
-//            val rnd = Random()
-//            while (salt.length < 10) { // length of the random string.
-//                val index = (rnd.nextFloat() * SALTCHARS.length).toInt()
-//                salt.append(SALTCHARS[index])
-//            }
-//            return salt.toString()
-//
-//        }
 
         fun getFriendlyTime(timestamp: Long): String {
             val dateTime = Date(timestamp * 1000)
@@ -78,70 +51,70 @@ class Utils {
 
             if (years > 0) {
                 if (years == 1) {
-                    sb.append("a year")
+                    sb.append(Utils.getResString(R.string.time_year))
                 } else {
-                    sb.append("$years years")
+                    sb.append(Utils.getResString(R.string.time_years, years))
                 }
                 if (years <= 6 && months > 0) {
                     if (months == 1) {
-                        sb.append(" and a month")
+                        sb.append(Utils.getResString(R.string.time_and_a_month))
                     } else {
-                        sb.append(" and $months months")
+                        sb.append(Utils.getResString(R.string.time_and_months, months))
                     }
                 }
             } else if (months > 0) {
                 if (months == 1) {
-                    sb.append("a month")
+                    sb.append(Utils.getResString(R.string.time_month))
                 } else {
-                    sb.append("$months months")
+                    sb.append(Utils.getResString(R.string.time_months, months))
                 }
                 if (months <= 6 && days > 0) {
                     if (days == 1) {
-                        sb.append(" and a day")
+                        sb.append(Utils.getResString(R.string.time_and_a_day))
                     } else {
-                        sb.append(" and $days days")
+                        sb.append(Utils.getResString(R.string.time_and_days, days))
                     }
                 }
             } else if (days > 0) {
                 if (days == 1) {
-                    sb.append("a day")
+                    sb.append(Utils.getResString(R.string.time_day))
                 } else {
-                    sb.append("$days days")
+                    sb.append(Utils.getResString(R.string.time_days, days))
                 }
                 if (days <= 3 && hrs > 0) {
                     if (hrs == 1) {
-                        sb.append(" and an hour")
+                        sb.append(Utils.getResString(R.string.time_and_an_hour))
                     } else {
-                        sb.append(" and $hrs hours")
+                        sb.append(Utils.getResString(R.string.time_and_hours, hrs))
                     }
                 }
             } else if (hrs > 0) {
                 if (hrs == 1) {
-                    sb.append("an hour")
+                    sb.append(Utils.getResString(R.string.time_hour))
                 } else {
-                    sb.append("$hrs hours")
+                    sb.append(Utils.getResString(R.string.time_hours, hrs))
                 }
                 if (min > 1) {
-                    sb.append(" and $min minutes")
+                    sb.append(Utils.getResString(R.string.time_and_minutes, min))
                 }
             } else if (min > 0) {
                 if (min == 1) {
-                    sb.append("a minute")
+                    sb.append(Utils.getResString(R.string.time_minute))
                 } else {
-                    sb.append("$min minutes")
+                    sb.append(Utils.getResString(R.string.time_minutes, min))
                 }
                 if (sec > 1) {
-                    sb.append(" and $sec seconds")
+                    sb.append(Utils.getResString(R.string.time_and_seconds, sec))
                 }
             } else {
                 if (sec <= 1) {
-                    sb.append("about a second")
+                    sb.append(Utils.getResString(R.string.time_second))
                 } else {
-                    sb.append("about $sec seconds")
+                    sb.append(Utils.getResString(R.string.time_about_seconds, sec))
                 }
             }
 
-            sb.append(" ago")
+            sb.append(Utils.getResString(R.string.time_ago))
 
             return sb.toString()
         }

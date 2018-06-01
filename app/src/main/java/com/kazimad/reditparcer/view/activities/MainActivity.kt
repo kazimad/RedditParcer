@@ -27,10 +27,8 @@ import java.net.ConnectException
 import java.util.*
 
 
-class MainActivity : AppCompatActivity() {
-    private val PERMISSION_REQUESTS = 1
-    private var loadImageBitmap: Bitmap? = null
-    private var loadImageGif: GifDrawable? = null
+class MainActivity : BaseActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -52,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         if (t != null) {
             when (t) {
                 is ResponseException -> {
-                    showError(t.message)
+                    showError(t.errorMessege)
                     finish()
                 }
                 is ConnectException -> {
@@ -73,63 +71,6 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun getRequiredPermissions(): Array<String?> {
-        return try {
-            val info = this.packageManager.getPackageInfo(this.packageName, PackageManager.GET_PERMISSIONS)
-            val ps = info.requestedPermissions
-            if (ps != null && ps.isNotEmpty()) {
-                ps
-            } else {
-                arrayOfNulls(0)
-            }
-        } catch (e: Exception) {
-            arrayOfNulls(0)
-        }
-
-    }
-
-    private fun allPermissionsGranted(): Boolean {
-        for (permission in getRequiredPermissions()) {
-            if (!isPermissionGranted(this, permission!!)) {
-                return false
-            }
-        }
-        return true
-    }
-
-    private fun getRuntimePermissions() {
-        val allNeededPermissions = ArrayList<String>()
-        for (permission in getRequiredPermissions()) {
-            if (!isPermissionGranted(this, permission!!)) {
-                allNeededPermissions.add(permission)
-            }
-        }
-
-        if (!allNeededPermissions.isEmpty()) {
-            ActivityCompat.requestPermissions(this, allNeededPermissions.toTypedArray(), PERMISSION_REQUESTS)
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        if (allPermissionsGranted()) {
-            if (loadImageBitmap != null) {
-                saveImage(loadImageBitmap!!)
-            } else {
-                saveGif(loadImageGif!!)
-            }
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    }
-
-    private fun isPermissionGranted(context: Context, permission: String): Boolean {
-        if (ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED) {
-            Logger.log("Permission granted: $permission")
-            return true
-        }
-        Logger.log("Permission NOT granted: $permission")
-        return false
-    }
-
     override fun onBackPressed() {
         val count = supportFragmentManager.backStackEntryCount
         if (count == 1) {
@@ -137,50 +78,5 @@ class MainActivity : AppCompatActivity() {
         } else {
             supportFragmentManager.popBackStack()
         }
-    }
-
-    fun saveImage(image: Bitmap) {
-        loadImageBitmap = image
-        if (allPermissionsGranted()) {
-            try {
-                val millis = System.currentTimeMillis()
-                MediaStore.Images.Media.insertImage(App.instance.contentResolver, image,
-                        TimeFormattingUtil.formatDateWithPattern(millis, TimeFormattingUtil.DISPLAY_TIME_DATE_PATTERN_1),
-                        "some description")
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            loadImageBitmap = null
-        } else {
-            getRuntimePermissions()
-        }
-    }
-
-    fun saveGif(drawable: GifDrawable) {
-        loadImageGif = drawable
-        if (allPermissionsGranted()) {
-            val byteBuffer = drawable.buffer
-            val arr = ByteArray(byteBuffer.remaining())
-            byteBuffer.get(arr)
-            val file = createFile()
-            try {
-                val fos = FileOutputStream(file.absolutePath)
-                fos.write(arr)
-                fos.flush()
-                fos.close()
-            } catch (ioe: IOException) {
-                ioe.printStackTrace()
-            }
-            loadImageGif = null
-        } else {
-            getRuntimePermissions()
-        }
-    }
-
-    private fun createFile(): File {
-        val millis = System.currentTimeMillis()
-        val file = File(Environment.getExternalStorageDirectory().toString() + File.separator + TimeFormattingUtil.formatDateWithPattern(millis, TimeFormattingUtil.DISPLAY_TIME_DATE_PATTERN_1) + ".gif")
-        file.createNewFile()
-        return file
     }
 }

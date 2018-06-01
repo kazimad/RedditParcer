@@ -13,4 +13,26 @@
     <string name="image_loaded">Image Loaded</string>
     <string name="text_save">save</string>
     <string name="load_error">load error</string>
+
+    <string name="time_year">a year</string>
+    <string name="time_years">%d years</string>
+    <string name="time_and_a_month">\u0020and a month</string>
+    <string name="time_and_months">\u0020and %d months</string>
+    <string name="time_months">%d months</string>
+    <string name="time_month">a month</string>
+    <string name="time_and_a_day">\u0020and a day</string>
+    <string name="time_and_days">\u0020and a days</string>
+    <string name="time_days">days</string>
+    <string name="time_day">a day</string>
+    <string name="time_and_an_hour">\u0020and an hour</string>
+    <string name="time_and_hours">\u0020and hours</string>
+    <string name="time_hour">\u0020an hour</string>
+    <string name="time_hours">%d hours</string>
+    <string name="time_and_minutes">\u0020 and %d minutes</string>
+    <string name="time_minute">\u0020minute</string>
+    <string name="time_minutes">\u0020%d minutes</string>
+    <string name="time_second">about a second</string>
+    <string name="time_and_seconds">and %d seconds</string>
+    <string name="time_about_seconds">about %d seconds</string>
+    <string name="time_ago">\u0020ago</string>
 </resources>

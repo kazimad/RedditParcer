@@ -38,7 +38,6 @@ class TopListAdapter(var listener: onViewSelectedListener) : RecyclerView.Adapte
                                 .placeholder(R.drawable.ic_place_holder)
                                 .error(R.drawable.ic_broken_image)
                                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-
                         )
                         .transition(DrawableTransitionOptions.withCrossFade())
                         .into(itemView.itemImage)

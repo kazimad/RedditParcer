@@ -32,7 +32,6 @@ abstract class EndlessRecyclerViewScrollListener(private val layoutManager: Line
             }
             if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
                 // End has been reached
-                Log.i("InfiniteScrollListener", "End reached")
                 onLoadMore()
                 loading = true
             }

@@ -18,7 +18,6 @@ class ApiHelper {
                     throw Throwable(it.message())
                 }
                 if (it.body() == null) {
-                    Logger.log("ApiHelper baseApiFilterPredicate if (it.body() == null) ")
                     throw ResponseException(it.message())
                 }
                 true

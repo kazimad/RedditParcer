@@ -98,11 +98,11 @@ class ListResultFragment : Fragment(), TopListAdapter.onViewSelectedListener {
     }
 
     override fun onItemSelected(url: String?) {
-        if (!url.isNullOrEmpty() || url!!.toLowerCase().endsWith(".png")
+        if (!url.isNullOrEmpty() && (url!!.toLowerCase().endsWith(".png")
                 || url.toLowerCase().endsWith(".jpeg") || url.toLowerCase().endsWith(".jpg")
                 || url.toLowerCase().endsWith(".gif") || url.toLowerCase().endsWith(".gifv")
-                || url.toLowerCase().endsWith(".bmp") || url.toLowerCase().endsWith(".webp")) {
-            (mActivity as MainActivity).addFragmentToStack(ImageFragment.newInstance(url!!))
+                || url.toLowerCase().endsWith(".bmp") || url.toLowerCase().endsWith(".webp"))) {
+            (mActivity as MainActivity).addFragmentToStack(ImageFragment.newInstance(url))
         } else {
             Toast.makeText(topList.context, Utils.getResString(R.string.error_no_image), LENGTH_LONG).show()
         }

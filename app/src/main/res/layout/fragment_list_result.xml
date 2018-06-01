@@ -2,23 +2,26 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <RelativeLayout
         android:id="@+id/progressContainer"
-        android:layout_centerInParent="true"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
         <ProgressBar
-            android:layout_centerHorizontal="true"
             android:id="@+id/loadingProgress"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true" />
+
         <TextView
-            android:layout_marginTop="@dimen/dimen_normal"
-            android:layout_below="@+id/loadingProgress"
-            android:layout_centerHorizontal="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/loadingProgress"
+            android:layout_centerHorizontal="true"
             android:layout_centerInParent="true"
+            android:layout_marginTop="@dimen/dimen_normal"
             android:text="@string/loading" />
     </RelativeLayout>
 
