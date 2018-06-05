@@ -25,8 +25,6 @@ import kotlinx.android.synthetic.main.fragment_list_result.*
 
 
 class ListResultFragment : Fragment(), MainAppContext, TopListAdapter.onViewSelectedListener {
-
-
     companion object {
         const val MAX_ITEMS_COUNT: Int = 50
     }
@@ -120,8 +118,7 @@ class ListResultFragment : Fragment(), MainAppContext, TopListAdapter.onViewSele
     override fun onItemSelected(url: String?) {
         if (!url.isNullOrEmpty() && (url!!.toLowerCase().endsWith(".png")
                         || url.toLowerCase().endsWith(".jpeg") || url.toLowerCase().endsWith(".jpg")
-                        || url.toLowerCase().endsWith(".gif") || url.toLowerCase().endsWith(".gifv")
-                        || url.toLowerCase().endsWith(".bmp") || url.toLowerCase().endsWith(".webp"))) {
+                        || url.toLowerCase().endsWith(".bmp"))) {
             (mActivity as MainActivity).addFragmentToStack(ImageFragment.newInstance(url))
         } else {
             Toast.makeText(topList.context, Utils.getResString(R.string.error_no_image), LENGTH_LONG).show()

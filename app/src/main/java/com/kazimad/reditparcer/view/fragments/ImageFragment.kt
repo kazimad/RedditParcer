@@ -55,39 +55,7 @@ class ImageFragment : Fragment(), MainAppContext {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (arguments != null) {
-            var fixedGif = ""
             targetUrl = arguments!!.getString(BUNDLE_PARAM)
-
-            if (targetUrl.endsWith(".gif") || targetUrl.endsWith(".gifv")) {
-                var fixedGif = targetUrl
-                if (fixedGif.endsWith(".gifv")) {
-                    fixedGif = targetUrl.replace(".gifv", ".gif")
-                }
-                Glide.with(bigImage)
-                        .asGif()
-                        .load(fixedGif)
-                        .apply(RequestOptions()
-                                .error(R.drawable.ic_broken_image)
-                                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                        )
-                        .transition(DrawableTransitionOptions.withCrossFade())
-                        .listener(object : RequestListener<GifDrawable> {
-                            override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<GifDrawable>?, isFirstResource: Boolean): Boolean {
-                                imageProgress.visibility = View.GONE
-                                loadButton.isEnabled = false
-                                Toast.makeText(bigImage.context, e?.message, Toast.LENGTH_LONG).show()
-                                return false
-                            }
-
-                            override fun onResourceReady(resource: GifDrawable?, model: Any?, target: Target<GifDrawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                                loadButton.isEnabled = true
-                                imageProgress.visibility = View.GONE
-                                cashedGif = resource
-                                return false
-                            }
-                        })
-                        .into(bigImage)
-            } else {
                 Glide.with(bigImage.context)
                         .asBitmap()
                         .load(targetUrl)
@@ -111,7 +79,7 @@ class ImageFragment : Fragment(), MainAppContext {
                         })
                         .into(bigImage)
             }
-        }
+//        }
         loadButton.setOnClickListener {
                 // had done like in telegram, with out callback
                 Thread(Runnable { saveButtonClick() }).start()
@@ -119,12 +87,8 @@ class ImageFragment : Fragment(), MainAppContext {
     }
 
     fun saveButtonClick() {
-        if (cashedBitmap != null) {
             (mActivity as MainActivity).saveImage(cashedBitmap!!)
-        }
-        if (cashedGif != null) {
-            (mActivity as MainActivity).saveGif(cashedGif!!)
-        }
+
     }
 
     override fun onAttach(context: Context?) {
