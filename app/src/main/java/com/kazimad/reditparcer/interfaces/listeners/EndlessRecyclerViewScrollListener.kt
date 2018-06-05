@@ -2,7 +2,10 @@ package com.kazimad.reditparcer.interfaces.listeners
 
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
+import com.kazimad.reditparcer.tools.Logger
+import com.kazimad.reditparcer.R.string.loading
+
+
 
 /**
  * Created by Kazimad on 26.05.2018.
@@ -10,7 +13,7 @@ import android.util.Log
 abstract class EndlessRecyclerViewScrollListener(private val layoutManager: LinearLayoutManager) : RecyclerView.OnScrollListener() {
 
     private var loading = true
-    private var visibleThreshold = 3
+    private var visibleThreshold = 0
     private var visibleItemCount = 0
     private var firstVisibleItem = 0
     private var previousTotal = 0
@@ -18,7 +21,6 @@ abstract class EndlessRecyclerViewScrollListener(private val layoutManager: Line
 
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
-
         if (dy > 0) {
             visibleItemCount = recyclerView.childCount
             totalItemCount = layoutManager.itemCount
@@ -38,5 +40,9 @@ abstract class EndlessRecyclerViewScrollListener(private val layoutManager: Line
         }
     }
 
+    fun reset(previousTotal: Int, loading: Boolean) {
+        this.previousTotal = previousTotal
+        this.loading = loading
+    }
     abstract fun onLoadMore()
 }

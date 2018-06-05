@@ -14,7 +14,7 @@ import io.reactivex.schedulers.Schedulers
 
 class ListResultFViewModel : ViewModel() {
     var topLiveData: MutableLiveData<ArrayList<ChildrenItem>?> = MutableLiveData()
-    var errorLiveData: MutableLiveData<InnerError> = MutableLiveData()
+    var errorLiveData: MutableLiveData<Throwable> = MutableLiveData()
     var loadedChildrenItems = ArrayList<ChildrenItem>()
     var lastPosition: Int = 0
 
@@ -28,10 +28,7 @@ class ListResultFViewModel : ViewModel() {
                     topLiveData.value = result.body()!!.data.children as ArrayList<ChildrenItem>
                 }, { error ->
                     error.printStackTrace()
-                    val innerError = InnerError()
-                    innerError.errorMessage = error?.localizedMessage
-                    innerError.throwable = error?.cause
-                    errorLiveData.value = innerError
+                    errorLiveData.value = error
                 })
     }
 }

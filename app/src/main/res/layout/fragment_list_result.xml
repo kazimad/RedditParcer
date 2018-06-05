@@ -16,6 +16,10 @@
             android:layout_centerHorizontal="true" />
 
         <TextView
+            android:gravity="center"
+            android:layout_marginStart="@dimen/dimen_large"
+            android:layout_marginEnd="@dimen/dimen_large"
+            android:id="@+id/errorText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/loadingProgress"

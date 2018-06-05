@@ -88,7 +88,15 @@ class TopListAdapter(var listener: onViewSelectedListener) : RecyclerView.Adapte
         if (topList.lastIndex < ListResultFragment.MAX_ITEMS_COUNT - 1) {
             topList[topList.lastIndex].flag = LOADING_FLAG
         }
+
         notifyDataSetChanged()
+    }
+
+    fun removeLoadingByForce() {
+        if (!topList.isEmpty()) {
+            topList[topList.lastIndex].flag = REGULAR_FLAG
+            notifyDataSetChanged()
+        }
     }
 
     interface onViewSelectedListener {

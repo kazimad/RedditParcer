@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -19,15 +20,16 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.kazimad.reditparcer.R
+import com.kazimad.reditparcer.interfaces.MainAppContext
 import com.kazimad.reditparcer.tools.BUNDLE_PARAM
+import com.kazimad.reditparcer.tools.Logger
 import com.kazimad.reditparcer.view.activities.MainActivity
 import kotlinx.android.synthetic.main.fragment_image.*
 
 /**
  * Created by Kazimad on 27.05.2018.
  */
-class ImageFragment : Fragment() {
-
+class ImageFragment : Fragment(), MainAppContext {
 
     private lateinit var mActivity: Activity
     private lateinit var targetUrl: String
@@ -71,6 +73,7 @@ class ImageFragment : Fragment() {
                             override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<GifDrawable>?, isFirstResource: Boolean): Boolean {
                                 imageProgress.visibility = View.GONE
                                 loadButton.isEnabled = false
+                                Toast.makeText(bigImage.context, e?.message, Toast.LENGTH_LONG).show()
                                 return false
                             }
 
@@ -127,5 +130,9 @@ class ImageFragment : Fragment() {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         mActivity = this.activity!!
+    }
+
+    override fun onLoadError() {
+        Logger.log("ImageFragment onLoadError")
     }
 }

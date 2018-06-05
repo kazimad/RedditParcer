@@ -14,6 +14,7 @@ import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import com.kazimad.reditparcer.R
 import com.kazimad.reditparcer.adapters.TopListAdapter
+import com.kazimad.reditparcer.interfaces.MainAppContext
 import com.kazimad.reditparcer.interfaces.listeners.EndlessRecyclerViewScrollListener
 import com.kazimad.reditparcer.models.inner_models.ChildItemWrapper
 import com.kazimad.reditparcer.models.response.ChildrenItem
@@ -24,7 +25,8 @@ import com.kazimad.reditparcer.view_models.ListResultFViewModel
 import kotlinx.android.synthetic.main.fragment_list_result.*
 
 
-class ListResultFragment : Fragment(), TopListAdapter.onViewSelectedListener {
+class ListResultFragment : Fragment(), MainAppContext, TopListAdapter.onViewSelectedListener {
+
 
     companion object {
         const val MAX_ITEMS_COUNT: Int = 50
@@ -32,6 +34,7 @@ class ListResultFragment : Fragment(), TopListAdapter.onViewSelectedListener {
 
     private lateinit var viewModel: ListResultFViewModel
     private lateinit var mActivity: Activity
+    private lateinit var loadMoreListener: EndlessRecyclerViewScrollListener
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_list_result, container, false)
     }
@@ -42,6 +45,7 @@ class ListResultFragment : Fragment(), TopListAdapter.onViewSelectedListener {
         viewModel = ViewModelProviders.of(this).get(ListResultFViewModel::class.java)
         viewModel.topLiveData.observe(this, Observer { onResultTopLiveData(it) })
         viewModel.errorLiveData.observe(this, Observer { (mActivity as MainActivity).onMyError(it) })
+        viewModel.errorLiveData.value = null
         if (!viewModel.loadedChildrenItems.isEmpty()) {
 
             workWithDataForRecycleView(viewModel.loadedChildrenItems)
@@ -82,11 +86,15 @@ class ListResultFragment : Fragment(), TopListAdapter.onViewSelectedListener {
         viewModel.loadedChildrenItems = itemsToSave
     }
 
+    override fun onResume() {
+        super.onResume()
+        loadMoreListener.reset(0, true)
+    }
 
     private fun workOnRecycleView() {
         topList.layoutManager = LinearLayoutManager(topList.context)
         topList.adapter = TopListAdapter(this)
-        topList.addOnScrollListener(object : EndlessRecyclerViewScrollListener(topList.layoutManager as LinearLayoutManager) {
+        loadMoreListener = object : EndlessRecyclerViewScrollListener(topList.layoutManager as LinearLayoutManager) {
             override fun onLoadMore() {
                 if (topList.adapter.itemCount <= MAX_ITEMS_COUNT) {
                     viewModel.callListResults((topList.adapter as TopListAdapter).getItems()[(topList.adapter as TopListAdapter).getItems().lastIndex].childWrappedData?.data?.name)
@@ -94,17 +102,26 @@ class ListResultFragment : Fragment(), TopListAdapter.onViewSelectedListener {
                     Toast.makeText(topList.context, Utils.getResString(R.string.limit_items), Toast.LENGTH_LONG).show()
                 }
             }
-        })
+        }
+        topList.addOnScrollListener(loadMoreListener)
     }
 
     override fun onItemSelected(url: String?) {
         if (!url.isNullOrEmpty() && (url!!.toLowerCase().endsWith(".png")
-                || url.toLowerCase().endsWith(".jpeg") || url.toLowerCase().endsWith(".jpg")
-                || url.toLowerCase().endsWith(".gif") || url.toLowerCase().endsWith(".gifv")
-                || url.toLowerCase().endsWith(".bmp") || url.toLowerCase().endsWith(".webp"))) {
+                        || url.toLowerCase().endsWith(".jpeg") || url.toLowerCase().endsWith(".jpg")
+                        || url.toLowerCase().endsWith(".gif") || url.toLowerCase().endsWith(".gifv")
+                        || url.toLowerCase().endsWith(".bmp") || url.toLowerCase().endsWith(".webp"))) {
             (mActivity as MainActivity).addFragmentToStack(ImageFragment.newInstance(url))
         } else {
             Toast.makeText(topList.context, Utils.getResString(R.string.error_no_image), LENGTH_LONG).show()
         }
+    }
+
+    override fun onLoadError() {
+        loadingProgress.visibility = View.GONE
+        errorText.text = Utils.getResString(R.string.error_connection_full)
+        (topList.adapter as TopListAdapter).removeLoadingByForce()
+        loadMoreListener.reset(0, true)
+
     }
 }

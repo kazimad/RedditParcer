@@ -1,30 +1,18 @@
 package com.kazimad.reditparcer.view.activities
 
-import android.content.Context
-import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore
-import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
-import com.bumptech.glide.load.resource.gif.GifDrawable
-import com.kazimad.reditparcer.App
 import com.kazimad.reditparcer.R
-import com.kazimad.reditparcer.models.error.InnerError
+import com.kazimad.reditparcer.interfaces.MainAppContext
 import com.kazimad.reditparcer.models.error.ResponseException
 import com.kazimad.reditparcer.tools.Logger
-import com.kazimad.reditparcer.tools.TimeFormattingUtil
+import com.kazimad.reditparcer.tools.Utils
 import com.kazimad.reditparcer.view.fragments.ListResultFragment
 import kotlinx.android.synthetic.main.activity_main.*
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
 import java.net.ConnectException
-import java.util.*
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 
 class MainActivity : BaseActivity() {
@@ -53,13 +41,14 @@ class MainActivity : BaseActivity() {
                     showError(t.errorMessege)
                     finish()
                 }
-                is ConnectException -> {
-                    showError(t.message)
-                    finish()
+                is UnknownHostException, is ConnectException, is SocketTimeoutException ->{
+                    Logger.log("onMyError t is ${t.javaClass.canonicalName}")
+                    showError(Utils.getResString(R.string.error_connection))
+                    (supportFragmentManager.fragments.get(supportFragmentManager.backStackEntryCount-1) as MainAppContext).onLoadError()
                 }
                 else -> {
                     (t).printStackTrace()
-                    showError((t as InnerError).errorMessage)
+                    showError(t.message)
                     finish()
                 }
             }
