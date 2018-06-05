@@ -1,17 +1,22 @@
 package com.kazimad.reditparcer.view.activities
 
+import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.widget.Toast
 import com.bumptech.glide.load.resource.gif.GifDrawable
 import com.kazimad.reditparcer.App
+import com.kazimad.reditparcer.R
 import com.kazimad.reditparcer.tools.Logger
 import com.kazimad.reditparcer.tools.TimeFormattingUtil
+import com.kazimad.reditparcer.tools.Utils
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -21,7 +26,7 @@ abstract class BaseActivity : AppCompatActivity() {
     private val PERMISSION_REQUESTS = 1
     private var loadImageBitmap: Bitmap? = null
     private var loadImageGif: GifDrawable? = null
-
+    private var dontAskAgainChecked: Boolean = false
     private fun getRequiredPermissions(): Array<String?> {
         return try {
             val info = this.packageManager.getPackageInfo(this.packageName, PackageManager.GET_PERMISSIONS)
@@ -53,7 +58,6 @@ abstract class BaseActivity : AppCompatActivity() {
                 allNeededPermissions.add(permission)
             }
         }
-
         if (!allNeededPermissions.isEmpty()) {
             ActivityCompat.requestPermissions(this, allNeededPermissions.toTypedArray(), PERMISSION_REQUESTS)
         }
@@ -65,6 +69,18 @@ abstract class BaseActivity : AppCompatActivity() {
                 saveImage(loadImageBitmap!!)
             } else {
                 saveGif(loadImageGif!!)
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            for (i in 0 until permissions.size) {
+                if (permissions[i] == Manifest.permission.WRITE_EXTERNAL_STORAGE || permissions[i] == Manifest.permission.WRITE_EXTERNAL_STORAGE) {
+                    // because android asks it in one dialog
+                    dontAskAgainChecked = !shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    if (dontAskAgainChecked) {
+                        Toast.makeText(App.instance, Utils.getResString(R.string.text_allow), Toast.LENGTH_LONG).show()
+                    }
+                }
             }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)

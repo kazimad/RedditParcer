@@ -23,6 +23,8 @@ import com.kazimad.reditparcer.R
 import com.kazimad.reditparcer.interfaces.MainAppContext
 import com.kazimad.reditparcer.tools.BUNDLE_PARAM
 import com.kazimad.reditparcer.tools.Logger
+import com.kazimad.reditparcer.tools.Utils
+import com.kazimad.reditparcer.view.activities.BaseActivity
 import com.kazimad.reditparcer.view.activities.MainActivity
 import kotlinx.android.synthetic.main.fragment_image.*
 
@@ -110,15 +112,13 @@ class ImageFragment : Fragment(), MainAppContext {
                         .into(bigImage)
             }
         }
-        loadButton.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(p0: View?) {
+        loadButton.setOnClickListener {
                 // had done like in telegram, with out callback
-                Thread(Runnable { loadButtonClick() }).start()
-            }
-        })
+                Thread(Runnable { saveButtonClick() }).start()
+        }
     }
 
-    fun loadButtonClick() {
+    fun saveButtonClick() {
         if (cashedBitmap != null) {
             (mActivity as MainActivity).saveImage(cashedBitmap!!)
         }
