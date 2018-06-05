@@ -3,11 +3,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+    <android.support.v7.widget.RecyclerView
+
+        android:id="@+id/topList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <RelativeLayout
         android:id="@+id/progressContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true">
+
 
         <ProgressBar
             android:id="@+id/loadingProgress"
@@ -15,23 +23,28 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true" />
 
+
         <TextView
-            android:gravity="center"
-            android:layout_marginStart="@dimen/dimen_large"
-            android:layout_marginEnd="@dimen/dimen_large"
             android:id="@+id/errorText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/loadingProgress"
             android:layout_centerHorizontal="true"
             android:layout_centerInParent="true"
+            android:layout_marginEnd="@dimen/dimen_large"
+            android:layout_marginStart="@dimen/dimen_large"
             android:layout_marginTop="@dimen/dimen_normal"
+            android:gravity="center"
             android:text="@string/loading" />
+
+        <Button
+            android:id="@+id/retryButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/errorText"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dimen_hugest"
+            android:text="@string/text_retry"
+            android:visibility="gone" />
     </RelativeLayout>
-
-    <android.support.v7.widget.RecyclerView
-
-        android:id="@+id/topList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 </RelativeLayout>

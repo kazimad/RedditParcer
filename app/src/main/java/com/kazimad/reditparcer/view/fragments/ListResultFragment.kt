@@ -18,7 +18,6 @@ import com.kazimad.reditparcer.interfaces.MainAppContext
 import com.kazimad.reditparcer.interfaces.listeners.EndlessRecyclerViewScrollListener
 import com.kazimad.reditparcer.models.inner_models.ChildItemWrapper
 import com.kazimad.reditparcer.models.response.ChildrenItem
-import com.kazimad.reditparcer.tools.Logger
 import com.kazimad.reditparcer.tools.Utils
 import com.kazimad.reditparcer.view.activities.MainActivity
 import com.kazimad.reditparcer.view_models.ListResultFViewModel
@@ -44,10 +43,17 @@ class ListResultFragment : Fragment(), MainAppContext, TopListAdapter.onViewSele
         workOnRecycleView()
         viewModel = ViewModelProviders.of(this).get(ListResultFViewModel::class.java)
         viewModel.topLiveData.observe(this, Observer { onResultTopLiveData(it) })
-        viewModel.errorLiveData.observe(this, Observer { (mActivity as MainActivity).onMyError(it) })
+        viewModel.errorLiveData.observe(this, Observer { onErrorLiveData(it) })
         viewModel.errorLiveData.value = null
-        if (!viewModel.loadedChildrenItems.isEmpty()) {
 
+        retryButton.setOnClickListener {
+            loadingProgress.visibility = View.VISIBLE
+            errorText.text = Utils.getResString(R.string.loading)
+            retryButton.visibility = View.GONE
+            viewModel.callListResults()
+        }
+
+        if (!viewModel.loadedChildrenItems.isEmpty()) {
             workWithDataForRecycleView(viewModel.loadedChildrenItems)
             topList.scrollToPosition(viewModel.lastPosition)
             viewModel.loadedChildrenItems.clear()
@@ -57,7 +63,12 @@ class ListResultFragment : Fragment(), MainAppContext, TopListAdapter.onViewSele
     }
 
     private fun onResultTopLiveData(modelData: ArrayList<ChildrenItem>?) {
+        progressContainer.visibility = View.GONE
         workWithDataForRecycleView(modelData)
+    }
+
+    private fun onErrorLiveData(error: Throwable?) {
+        (mActivity as MainActivity).onMyError(error)
     }
 
     private fun workWithDataForRecycleView(modelData: ArrayList<ChildrenItem>?) {
@@ -118,6 +129,10 @@ class ListResultFragment : Fragment(), MainAppContext, TopListAdapter.onViewSele
     }
 
     override fun onLoadError() {
+        if (topList.adapter == null || topList.adapter.itemCount == 0) {
+            retryButton.visibility = View.VISIBLE
+        }
+
         loadingProgress.visibility = View.GONE
         errorText.text = Utils.getResString(R.string.error_connection_full)
         (topList.adapter as TopListAdapter).removeLoadingByForce()

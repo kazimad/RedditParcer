@@ -3,7 +3,6 @@ package com.kazimad.reditparcer.view_models
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.kazimad.reditparcer.extentions.getApiProvider
-import com.kazimad.reditparcer.models.error.InnerError
 import com.kazimad.reditparcer.models.response.ChildrenItem
 import com.kazimad.reditparcer.models.response.TopResponse
 import com.kazimad.reditparcer.remote.ApiHelper
