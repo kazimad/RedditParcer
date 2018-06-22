@@ -14,7 +14,8 @@ import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import com.kazimad.reditparcer.R
 import com.kazimad.reditparcer.adapters.TopListAdapter
-import com.kazimad.reditparcer.interfaces.MainAppContext
+import com.kazimad.reditparcer.interfaces.MainFragmentInterface
+import com.kazimad.reditparcer.interfaces.MainInterface
 import com.kazimad.reditparcer.interfaces.listeners.EndlessRecyclerViewScrollListener
 import com.kazimad.reditparcer.models.inner_models.ChildItemWrapper
 import com.kazimad.reditparcer.models.response.ChildrenItem
@@ -24,14 +25,15 @@ import com.kazimad.reditparcer.view_models.ListResultFViewModel
 import kotlinx.android.synthetic.main.fragment_list_result.*
 
 
-class ListResultFragment : Fragment(), MainAppContext, TopListAdapter.onViewSelectedListener {
+class ListResultFragment : Fragment(), MainFragmentInterface, TopListAdapter.onViewSelectedListener {
     companion object {
         const val MAX_ITEMS_COUNT: Int = 50
     }
 
     private lateinit var viewModel: ListResultFViewModel
-    private lateinit var mActivity: Activity
     private lateinit var loadMoreListener: EndlessRecyclerViewScrollListener
+    private lateinit var mainInterface: MainInterface
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_list_result, container, false)
     }
@@ -66,7 +68,7 @@ class ListResultFragment : Fragment(), MainAppContext, TopListAdapter.onViewSele
     }
 
     private fun onErrorLiveData(error: Throwable?) {
-        (mActivity as MainActivity).onMyError(error)
+        mainInterface.onErrorCalled(error)
     }
 
     private fun workWithDataForRecycleView(modelData: ArrayList<ChildrenItem>?) {
@@ -82,7 +84,17 @@ class ListResultFragment : Fragment(), MainAppContext, TopListAdapter.onViewSele
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        mActivity = this.activity!!
+        val mActivity: Activity
+
+        if (context is Activity) {
+            mActivity = context
+            try {
+                mainInterface = mActivity as MainInterface
+            } catch (e: ClassCastException) {
+                throw ClassCastException(activity.toString() + " must implement OnArticleSelectedListener");
+            }
+        }
+
     }
 
     override fun onPause() {
@@ -119,7 +131,7 @@ class ListResultFragment : Fragment(), MainAppContext, TopListAdapter.onViewSele
         if (!url.isNullOrEmpty() && (url!!.toLowerCase().endsWith(".png")
                         || url.toLowerCase().endsWith(".jpeg") || url.toLowerCase().endsWith(".jpg")
                         || url.toLowerCase().endsWith(".bmp"))) {
-            (mActivity as MainActivity).addFragmentToStack(ImageFragment.newInstance(url))
+            mainInterface.onAddToFragmentStackCalled(ImageFragment.newInstance(url))
         } else {
             Toast.makeText(topList.context, Utils.getResString(R.string.error_no_image), LENGTH_LONG).show()
         }

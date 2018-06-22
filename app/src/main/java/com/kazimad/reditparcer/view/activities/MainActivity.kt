@@ -1,10 +1,12 @@
 package com.kazimad.reditparcer.view.activities
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.widget.Toast
 import com.kazimad.reditparcer.R
-import com.kazimad.reditparcer.interfaces.MainAppContext
+import com.kazimad.reditparcer.interfaces.MainFragmentInterface
+import com.kazimad.reditparcer.interfaces.MainInterface
 import com.kazimad.reditparcer.models.error.ResponseException
 import com.kazimad.reditparcer.tools.Logger
 import com.kazimad.reditparcer.tools.Utils
@@ -15,7 +17,8 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
 
-class MainActivity : BaseActivity() {
+class MainActivity : BaseActivity(), MainInterface {
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,10 +44,10 @@ class MainActivity : BaseActivity() {
                     showError(t.errorMessege)
                     finish()
                 }
-                is UnknownHostException, is ConnectException, is SocketTimeoutException ->{
+                is UnknownHostException, is ConnectException, is SocketTimeoutException -> {
                     Logger.log("onMyError t is ${t.javaClass.canonicalName}")
                     showError(Utils.getResString(R.string.error_connection))
-                    (supportFragmentManager.fragments.get(supportFragmentManager.backStackEntryCount-1) as MainAppContext).onLoadError()
+                    (supportFragmentManager.fragments.get(supportFragmentManager.backStackEntryCount - 1) as MainFragmentInterface).onLoadError()
                 }
                 else -> {
                     (t).printStackTrace()
@@ -67,5 +70,17 @@ class MainActivity : BaseActivity() {
         } else {
             supportFragmentManager.popBackStack()
         }
+    }
+
+    override fun onErrorCalled(t: Throwable?) {
+        onMyError(t)
+    }
+
+    override fun onAddToFragmentStackCalled(fragment: Fragment, tag: String?) {
+        addFragmentToStack(fragment, tag)
+    }
+
+    override fun onSaveImageClick(image: Bitmap) {
+        saveImage(image)
     }
 }

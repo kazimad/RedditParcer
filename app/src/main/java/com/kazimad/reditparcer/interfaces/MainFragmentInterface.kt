@@ -1,5 +1,5 @@
 package com.kazimad.reditparcer.interfaces
 
-interface MainAppContext {
+interface MainFragmentInterface {
     fun onLoadError()
 }
