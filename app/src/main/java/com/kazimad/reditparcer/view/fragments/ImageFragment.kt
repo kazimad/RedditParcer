@@ -31,7 +31,6 @@ class ImageFragment : Fragment() {
 
     private lateinit var targetUrl: String
     private var cashedBitmap: Bitmap? = null
-    private var cashedGif: GifDrawable? = null
     private lateinit var mainInterface: MainInterface
 
     companion object {
@@ -99,12 +98,5 @@ class ImageFragment : Fragment() {
                 throw ClassCastException(activity.toString() + " must implement OnArticleSelectedListener");
             }
         }
-
     }
-
-//    override fun onAttach(activity: Activity?) {
-//        super.onAttach(activity)
-//    }
-
-
 }

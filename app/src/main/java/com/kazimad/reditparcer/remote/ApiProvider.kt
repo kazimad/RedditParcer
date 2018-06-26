@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.reflect.Modifier
 import java.util.concurrent.TimeUnit
 
-class ApiProvider() {
+class ApiProvider {
     companion object {
         const val baseUrl = "https://www.reddit.com/"
     }
