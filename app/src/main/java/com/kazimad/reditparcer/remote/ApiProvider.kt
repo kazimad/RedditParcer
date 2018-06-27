@@ -1,7 +1,9 @@
 package com.kazimad.reditparcer.remote
 
 import com.google.gson.GsonBuilder
+import com.kazimad.reditparcer.App.Companion.mainComponent
 import com.kazimad.reditparcer.BuildConfig
+import com.kazimad.reditparcer.dagger.component.MainComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -16,29 +18,30 @@ class ApiProvider {
     }
 
 
-    fun create(url: String): ApiInterface {
+    fun create(url: String): ApiInterface? {
 
-        val interceptor = HttpLoggingInterceptor()
-        val logLevel = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
+//        val interceptor = HttpLoggingInterceptor()
+//        val logLevel = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
+//
+//        val gson = GsonBuilder()
+//        gson.excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+//
+//        val okHttpClient = OkHttpClient.Builder()
+//                .addNetworkInterceptor(interceptor) // same for .addInterceptor(...)
+//                .connectTimeout(30, TimeUnit.SECONDS)
+//                .writeTimeout(30, TimeUnit.SECONDS)
+//                .readTimeout(30, TimeUnit.SECONDS)
+//                .addNetworkInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
+//                .build()
+//
+//        val retrofit = Retrofit.Builder()
+//                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .baseUrl(url)
+//                .client(okHttpClient)
+//                .build()
 
-        val gson = GsonBuilder()
-        gson.excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
-
-        val okHttpClient = OkHttpClient.Builder()
-                .addNetworkInterceptor(interceptor) // same for .addInterceptor(...)
-                .connectTimeout(30, TimeUnit.SECONDS)
-                .writeTimeout(30, TimeUnit.SECONDS)
-                .readTimeout(30, TimeUnit.SECONDS)
-                .addNetworkInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
-                .build()
-
-        val retrofit = Retrofit.Builder()
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(url)
-                .client(okHttpClient)
-                .build()
-
-        return retrofit.create(ApiInterface::class.java)
+//        return retrofit.create(ApiInterface::class.java)
+        return mainComponent.getApi()
     }
 }

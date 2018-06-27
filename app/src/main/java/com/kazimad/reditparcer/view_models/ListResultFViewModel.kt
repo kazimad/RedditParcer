@@ -18,6 +18,10 @@ class ListResultFViewModel : ViewModel() {
 
     fun callListResults(after: String? = null, lastVisiblePosition: Int = 0, limit: Int = 10) {
         lastPosition = lastVisiblePosition
+
+        // TODO The ViewModel’s concern is not to decide where the data comes from; that’s the concern of the Repository class
+        // TODO remove getApiInterface()
+
         getApiInterface().getList(after, limit)
                 .filter(ApiHelper.baseApiFilterPredicate(TopResponse::class))
                 .subscribeOn(Schedulers.io())
