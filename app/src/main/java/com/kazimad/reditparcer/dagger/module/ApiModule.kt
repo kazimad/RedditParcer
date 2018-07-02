@@ -5,7 +5,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.kazimad.reditparcer.BuildConfig
 import com.kazimad.reditparcer.remote.ApiInterface
-import com.kazimad.reditparcer.remote.ApiProvider
+import com.kazimad.reditparcer.remote.ApiRepository
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -49,7 +49,7 @@ class ApiModule {
         val retrofit = Retrofit.Builder()
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(ApiProvider.baseUrl)
+                .baseUrl(ApiRepository.baseUrl)
                 .client(getOkHttpClient())
                 .build()
 

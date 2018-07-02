@@ -12,13 +12,13 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.reflect.Modifier
 import java.util.concurrent.TimeUnit
 
-class ApiProvider {
+class ApiRepository {
     companion object {
         const val baseUrl = "https://www.reddit.com/"
     }
 
 
-    fun create(url: String): ApiInterface? {
+    fun create(url: String): ApiInterface {
 
 //        val interceptor = HttpLoggingInterceptor()
 //        val logLevel = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
