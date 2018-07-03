@@ -14,7 +14,11 @@ class ListResultFViewModel : ViewModel() {
 
     fun callListResults(after: String? = null, lastVisiblePosition: Int = 0, limit: Int = 10) {
         lastPosition = lastVisiblePosition
-
-        getListWithData(after, limit, topLiveData, errorLiveData)
+        getListWithData(after, limit)?.subscribe({ result ->
+            topLiveData.value = result.children as ArrayList<ChildrenItem>
+        }) { error ->
+            errorLiveData.value = Throwable(error.localizedMessage)
+            error.printStackTrace()
+        }
     }
 }
