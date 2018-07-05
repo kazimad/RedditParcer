@@ -2,6 +2,7 @@ package com.kazimad.reditparcer.dagger.component
 
 import com.kazimad.reditparcer.dagger.module.ApiModule
 import com.kazimad.reditparcer.remote.ApiInterface
+import com.kazimad.reditparcer.remote.ApiProvider
 import com.kazimad.reditparcer.remote.UsersRepository
 import dagger.Component
 import javax.inject.Inject
@@ -12,6 +13,7 @@ interface MainComponent {
 
     fun getApi(): ApiInterface
     fun getUserRepository():UsersRepository
+    fun getApiProvider():ApiProvider
 //    fun getGlide(): Glide
 //    fun getContext():Context
 }

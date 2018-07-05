@@ -1,5 +1,6 @@
 package com.kazimad.reditparcer.remote
 
+import com.kazimad.reditparcer.App
 import com.kazimad.reditparcer.models.response.Data
 import com.kazimad.reditparcer.models.response.TopResponse
 import com.kazimad.reditparcer.remote.ApiProvider.Companion.baseUrl
@@ -9,10 +10,11 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 
-class UsersRepository(private val apiProvider: ApiProvider) {
+
+class UsersRepository @Inject constructor() {
 
     fun getListWithData(after: String?, limit: Int): Observable<Data>? {
-        return apiProvider.create(baseUrl).getList(after, limit)
+        return App.mainComponent.getApiProvider().create(baseUrl).getList(after, limit)
                 .filter(ApiHelper.baseApiFilterPredicate(TopResponse::class))
                 .subscribeOn(Schedulers.io())
                 .flatMap { getDataFromResponse(it.body()!!) }

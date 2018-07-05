@@ -15,6 +15,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.reflect.Modifier
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 @Module
 class ApiModule {
@@ -57,7 +58,7 @@ class ApiModule {
     }
 
     @Provides
-    fun provideApiProvider(url: String): ApiProvider {
+    fun provideApiProvider(): ApiProvider {
         return ApiProvider()
     }
 }
