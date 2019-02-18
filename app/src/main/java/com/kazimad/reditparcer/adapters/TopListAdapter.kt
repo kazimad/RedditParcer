@@ -14,7 +14,7 @@ import com.kazimad.reditparcer.tools.Utils
 import com.kazimad.reditparcer.view.fragments.ListResultFragment
 import kotlinx.android.synthetic.main.item_result_list.view.*
 
-class TopListAdapter(var listener: onViewSelectedListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class TopListAdapter(var listener: OnViewSelectedListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         var REGULAR_FLAG = 1
@@ -99,7 +99,7 @@ class TopListAdapter(var listener: onViewSelectedListener) : RecyclerView.Adapte
         }
     }
 
-    interface onViewSelectedListener {
+    interface OnViewSelectedListener {
         fun onItemSelected(url: String?)
     }
 }

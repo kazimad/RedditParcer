@@ -15,7 +15,7 @@ class UsersRepository @Inject constructor() {
 
     fun getListWithData(after: String?, limit: Int): Observable<Data>? {
         return App.mainComponent.getApiProvider().create(baseUrl).getList(after, limit)
-                .filter(ApiHelper.baseApiFilterPredicate(TopResponse::class))
+                .filter(ApiHelper.baseApiFilterPredicate())
                 .subscribeOn(Schedulers.io())
                 .flatMap { getDataFromResponse(it.body()!!) }
                 .observeOn(AndroidSchedulers.mainThread())

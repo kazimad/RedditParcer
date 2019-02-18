@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Build
+import android.os.Handler
 import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
@@ -21,6 +22,7 @@ abstract class BaseActivity : AppCompatActivity() {
     private val PERMISSION_REQUESTS = 1
     private var loadImageBitmap: Bitmap? = null
     private var dontAskAgainChecked: Boolean = false
+    var handler = Handler()
     private fun getRequiredPermissions(): Array<String?> {
         return try {
             val info = this.packageManager.getPackageInfo(this.packageName, PackageManager.GET_PERMISSIONS)
@@ -93,8 +95,10 @@ abstract class BaseActivity : AppCompatActivity() {
                 MediaStore.Images.Media.insertImage(App.instance.contentResolver, image,
                         TimeFormattingUtil.formatDateWithPattern(millis, TimeFormattingUtil.DISPLAY_TIME_DATE_PATTERN_1),
                         "some description")
+                handler.post {Toast.makeText(this, getString(R.string.image_loaded), Toast.LENGTH_LONG).show()  }
             } catch (e: Exception) {
                 e.printStackTrace()
+                handler.post {Toast.makeText(this, getString(R.string.load_error), Toast.LENGTH_LONG).show()  }
             }
             loadImageBitmap = null
         } else {

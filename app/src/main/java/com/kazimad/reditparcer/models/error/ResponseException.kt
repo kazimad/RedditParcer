@@ -5,7 +5,5 @@ import java.lang.Exception
 /**
  * Created by kazimad on 28.02.2018.
  */
-class ResponseException(val errorMessege: String?) : Exception() {
-
-}
+class ResponseException(val errorMessage: String?) : Exception()
 

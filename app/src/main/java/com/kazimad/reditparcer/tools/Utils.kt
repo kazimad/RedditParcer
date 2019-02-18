@@ -49,74 +49,104 @@ class Utils {
             diffInSeconds /= 12
             val years = diffInSeconds
 
-            if (years > 0) {
-                if (years == 1) {
-                    sb.append(Utils.getResString(R.string.time_year))
-                } else {
-                    sb.append(Utils.getResString(R.string.time_years, years))
+            when {
+                years > 0 -> {
+                    yearsCounter(sb, years, months)
                 }
-                if (years <= 6 && months > 0) {
-                    if (months == 1) {
-                        sb.append(Utils.getResString(R.string.time_and_a_month))
-                    } else {
-                        sb.append(Utils.getResString(R.string.time_and_months, months))
-                    }
+                months > 0 -> {
+                    monthCounter(sb, years, days)
                 }
-            } else if (months > 0) {
-                if (months == 1) {
-                    sb.append(Utils.getResString(R.string.time_month))
-                } else {
-                    sb.append(Utils.getResString(R.string.time_months, months))
+                days > 0 -> {
+                    daysCounter(sb, days, hrs)
                 }
-                if (months <= 6 && days > 0) {
-                    if (days == 1) {
-                        sb.append(Utils.getResString(R.string.time_and_a_day))
-                    } else {
-                        sb.append(Utils.getResString(R.string.time_and_days, days))
-                    }
+                hrs > 0 -> {
+                    hourCounter(sb, hrs, min)
                 }
-            } else if (days > 0) {
-                if (days == 1) {
-                    sb.append(Utils.getResString(R.string.time_day))
-                } else {
-                    sb.append(Utils.getResString(R.string.time_days, days))
+                min > 0 -> {
+                    minutesCounter(sb, min, sec)
                 }
-                if (days <= 3 && hrs > 0) {
-                    if (hrs == 1) {
-                        sb.append(Utils.getResString(R.string.time_and_an_hour))
-                    } else {
-                        sb.append(Utils.getResString(R.string.time_and_hours, hrs))
-                    }
-                }
-            } else if (hrs > 0) {
-                if (hrs == 1) {
-                    sb.append(Utils.getResString(R.string.time_hour))
-                } else {
-                    sb.append(Utils.getResString(R.string.time_hours, hrs))
-                }
-                if (min > 1) {
-                    sb.append(Utils.getResString(R.string.time_and_minutes, min))
-                }
-            } else if (min > 0) {
-                if (min == 1) {
-                    sb.append(Utils.getResString(R.string.time_minute))
-                } else {
-                    sb.append(Utils.getResString(R.string.time_minutes, min))
-                }
-                if (sec > 1) {
-                    sb.append(Utils.getResString(R.string.time_and_seconds, sec))
-                }
-            } else {
-                if (sec <= 1) {
-                    sb.append(Utils.getResString(R.string.time_second))
-                } else {
-                    sb.append(Utils.getResString(R.string.time_about_seconds, sec))
+                else -> {
+                    lesMinuteCounter(sb, sec)
                 }
             }
-
             sb.append(Utils.getResString(R.string.time_ago))
-
             return sb.toString()
+        }
+
+
+        private fun yearsCounter(sb: StringBuffer, years: Int, months: Int) {
+            if (years == 1) {
+                sb.append(Utils.getResString(R.string.time_year))
+            } else {
+                sb.append(Utils.getResString(R.string.time_years, years))
+            }
+            if (years <= 6 && months > 0) {
+                if (months == 1) {
+                    sb.append(Utils.getResString(R.string.time_and_a_month))
+                } else {
+                    sb.append(Utils.getResString(R.string.time_and_months, months))
+                }
+            }
+        }
+
+        private fun monthCounter(sb: StringBuffer, months: Int, days: Int) {
+            if (months == 1) {
+                sb.append(Utils.getResString(R.string.time_month))
+            } else {
+                sb.append(Utils.getResString(R.string.time_months, months))
+            }
+            if (months <= 6 && days > 0) {
+                if (days == 1) {
+                    sb.append(Utils.getResString(R.string.time_and_a_day))
+                } else {
+                    sb.append(Utils.getResString(R.string.time_and_days, days))
+                }
+            }
+        }
+
+        private fun daysCounter(sb: StringBuffer, days: Int, hrs: Int) {
+            if (days == 1) {
+                sb.append(Utils.getResString(R.string.time_day))
+            } else {
+                sb.append(Utils.getResString(R.string.time_days, days))
+            }
+            if (days <= 3 && hrs > 0) {
+                if (hrs == 1) {
+                    sb.append(Utils.getResString(R.string.time_and_an_hour))
+                } else {
+                    sb.append(Utils.getResString(R.string.time_and_hours, hrs))
+                }
+            }
+        }
+
+        private fun hourCounter(sb: StringBuffer, hrs: Int, min: Int) {
+            if (hrs == 1) {
+                sb.append(Utils.getResString(R.string.time_hour))
+            } else {
+                sb.append(Utils.getResString(R.string.time_hours, hrs))
+            }
+            if (min > 1) {
+                sb.append(Utils.getResString(R.string.time_and_minutes, min))
+            }
+        }
+
+        private fun minutesCounter(sb: StringBuffer, min: Int, sec: Int) {
+            if (min == 1) {
+                sb.append(Utils.getResString(R.string.time_minute))
+            } else {
+                sb.append(Utils.getResString(R.string.time_minutes, min))
+            }
+            if (sec > 1) {
+                sb.append(Utils.getResString(R.string.time_and_seconds, sec))
+            }
+        }
+
+        private fun lesMinuteCounter(sb: StringBuffer, sec: Int) {
+            if (sec <= 1) {
+                sb.append(Utils.getResString(R.string.time_second))
+            } else {
+                sb.append(Utils.getResString(R.string.time_about_seconds, sec))
+            }
         }
     }
 }

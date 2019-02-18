@@ -8,7 +8,7 @@ import java.io.PrintWriter
 
 class Logger {
     companion object {
-        private val UNKNOWN_EXCEPTION = "Unknown exception"
+        private const val UNKNOWN_EXCEPTION = "Unknown exception"
         private const val MY_LOG = "myLog"
         private val LOGS_ENABLED = BuildConfig.DEBUG
 
@@ -31,14 +31,14 @@ class Logger {
         }
 
         private fun getStackTrace(throwable: Throwable): String {
-            try {
+            return try {
                 val cw = CharArrayWriter()
                 val w = PrintWriter(cw)
                 throwable.printStackTrace(w)
                 w.close()
-                return cw.toString()
+                cw.toString()
             } catch (e: Exception) {
-                return UNKNOWN_EXCEPTION
+                UNKNOWN_EXCEPTION
             }
 
         }

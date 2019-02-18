@@ -20,19 +20,18 @@ import com.kazimad.reditparcer.interfaces.listeners.EndlessRecyclerViewScrollLis
 import com.kazimad.reditparcer.models.inner_models.ChildItemWrapper
 import com.kazimad.reditparcer.models.response.ChildrenItem
 import com.kazimad.reditparcer.tools.Utils
-import com.kazimad.reditparcer.view.activities.MainActivity
 import com.kazimad.reditparcer.view_models.ListResultFViewModel
 import kotlinx.android.synthetic.main.fragment_list_result.*
 
 
-class ListResultFragment : Fragment(), MainFragmentInterface, TopListAdapter.onViewSelectedListener {
+class ListResultFragment : Fragment(), MainFragmentInterface, TopListAdapter.OnViewSelectedListener {
     companion object {
         const val MAX_ITEMS_COUNT: Int = 50
     }
 
     private lateinit var viewModel: ListResultFViewModel
-    private lateinit var loadMoreListener: EndlessRecyclerViewScrollListener
     private lateinit var mainInterface: MainInterface
+    private lateinit var loadMoreListener: EndlessRecyclerViewScrollListener
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_list_result, container, false)
@@ -91,10 +90,14 @@ class ListResultFragment : Fragment(), MainFragmentInterface, TopListAdapter.onV
             try {
                 mainInterface = mActivity as MainInterface
             } catch (e: ClassCastException) {
-                throw ClassCastException(activity.toString() + " must implement OnArticleSelectedListener");
+                throw ClassCastException(activity.toString() + " must implement MainInterface")
             }
         }
 
+    }
+    override fun onResume() {
+        super.onResume()
+        loadMoreListener.reset(0, true)
     }
 
     override fun onPause() {
@@ -107,9 +110,9 @@ class ListResultFragment : Fragment(), MainFragmentInterface, TopListAdapter.onV
         viewModel.loadedChildrenItems = itemsToSave
     }
 
-    override fun onResume() {
-        super.onResume()
-        loadMoreListener.reset(0, true)
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.disposeAll()
     }
 
     private fun workOnRecycleView() {

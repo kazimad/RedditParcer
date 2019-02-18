@@ -10,10 +10,7 @@ import javax.inject.Inject
 @Component(modules = [ApiModule::class])
 interface MainComponent {
 
-
     fun getApi(): ApiInterface
     fun getUserRepository():UsersRepository
     fun getApiProvider():ApiProvider
-//    fun getGlide(): Glide
-//    fun getContext():Context
 }

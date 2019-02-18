@@ -29,7 +29,7 @@ class MainActivity : BaseActivity(), MainInterface {
     }
 
 
-    fun addFragmentToStack(fragment: Fragment, tag: String? = null) {
+    private fun addFragmentToStack(fragment: Fragment, tag: String? = null) {
         supportFragmentManager.beginTransaction()
                 .add(this.container.id, fragment, fragment::class.java.canonicalName)
                 .addToBackStack(fragment::class.java.canonicalName)
@@ -37,22 +37,24 @@ class MainActivity : BaseActivity(), MainInterface {
                 .commit()
     }
 
-    fun onMyError(t: Throwable?) {
+    private fun onMyError(t: Throwable?) {
         if (t != null) {
+            Logger.log("onMyError  "+ t.javaClass.canonicalName )
+
             when (t) {
                 is ResponseException -> {
-                    showError(t.errorMessege)
-                    finish()
+                    Logger.log("onMyError  ")
+                    showError(t.errorMessage)
                 }
                 is UnknownHostException, is ConnectException, is SocketTimeoutException -> {
-                    Logger.log("onMyError t is ${t.javaClass.canonicalName}")
+                    Logger.log("onMyError 2 is ${t.javaClass.canonicalName}")
                     showError(Utils.getResString(R.string.error_connection))
-                    (supportFragmentManager.fragments.get(supportFragmentManager.backStackEntryCount - 1) as MainFragmentInterface).onLoadError()
+                    (supportFragmentManager.fragments[supportFragmentManager.backStackEntryCount - 1] as MainFragmentInterface).onLoadError()
                 }
                 else -> {
+                    Logger.log("onMyError 3 " + t.javaClass.canonicalName)
                     (t).printStackTrace()
                     showError(t.message)
-                    finish()
                 }
             }
         }
