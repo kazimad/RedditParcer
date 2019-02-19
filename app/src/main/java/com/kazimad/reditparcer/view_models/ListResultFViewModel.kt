@@ -20,13 +20,13 @@ class ListResultFViewModel : ViewModel() {
         getListWithData(after, limit)?.subscribe({ result ->
             topLiveData.value = result.children as ArrayList<ChildrenItem>
         }) { error ->
-            errorLiveData.value = (error.localizedMessage)
+            errorLiveData.value = Throwable(error.localizedMessage)
             error.printStackTrace()
         }?.let { compositeDisposable.add(it) }
 
     }
 
-    fun disposeAll(){
+    fun disposeAll() {
         compositeDisposable.clear()
         compositeDisposable.dispose()
     }

@@ -1,20 +1,17 @@
 package com.kazimad.reditparcer.view.activities
 
+import android.content.Context
 import android.graphics.Bitmap
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.widget.Toast
 import com.kazimad.reditparcer.R
 import com.kazimad.reditparcer.interfaces.MainFragmentInterface
 import com.kazimad.reditparcer.interfaces.MainInterface
-import com.kazimad.reditparcer.models.error.ResponseException
-import com.kazimad.reditparcer.tools.Logger
 import com.kazimad.reditparcer.tools.Utils
 import com.kazimad.reditparcer.view.fragments.ListResultFragment
 import kotlinx.android.synthetic.main.activity_main.*
-import java.net.ConnectException
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
 
 
 class MainActivity : BaseActivity(), MainInterface {
@@ -39,24 +36,16 @@ class MainActivity : BaseActivity(), MainInterface {
 
     private fun onMyError(t: Throwable?) {
         if (t != null) {
-            Logger.log("onMyError  "+ t.javaClass.canonicalName )
-
-            when (t) {
-                is ResponseException -> {
-                    Logger.log("onMyError  ")
-                    showError(t.errorMessage)
-                }
-                is UnknownHostException, is ConnectException, is SocketTimeoutException -> {
-                    Logger.log("onMyError 2 is ${t.javaClass.canonicalName}")
-                    showError(Utils.getResString(R.string.error_connection))
-                    (supportFragmentManager.fragments[supportFragmentManager.backStackEntryCount - 1] as MainFragmentInterface).onLoadError()
-                }
-                else -> {
-                    Logger.log("onMyError 3 " + t.javaClass.canonicalName)
-                    (t).printStackTrace()
-                    showError(t.message)
-                }
+            val cm = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val info = cm.activeNetworkInfo
+            if (info == null || !info.isConnected) {
+                showError(Utils.getResString(R.string.error_connection))
+                (supportFragmentManager.fragments[supportFragmentManager.backStackEntryCount - 1] as MainFragmentInterface).onLoadError()
+                return
             }
+            (t).printStackTrace()
+            showError(t.message)
+            (supportFragmentManager.fragments[supportFragmentManager.backStackEntryCount - 1] as MainFragmentInterface).onLoadError()
         }
     }
 

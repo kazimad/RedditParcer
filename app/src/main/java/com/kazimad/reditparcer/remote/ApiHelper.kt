@@ -1,7 +1,6 @@
 package com.kazimad.reditparcer.remote
 
 import com.kazimad.reditparcer.models.error.ResponseException
-import com.kazimad.reditparcer.tools.Logger
 import io.reactivex.functions.Predicate
 import retrofit2.Response
 import java.net.HttpURLConnection

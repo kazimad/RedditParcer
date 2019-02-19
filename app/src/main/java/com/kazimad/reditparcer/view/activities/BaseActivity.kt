@@ -13,7 +13,6 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import com.kazimad.reditparcer.App
 import com.kazimad.reditparcer.R
-import com.kazimad.reditparcer.tools.Logger
 import com.kazimad.reditparcer.tools.TimeFormattingUtil
 import com.kazimad.reditparcer.tools.Utils
 import java.util.*
@@ -79,10 +78,8 @@ abstract class BaseActivity : AppCompatActivity() {
 
     private fun isPermissionGranted(context: Context, permission: String): Boolean {
         if (ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED) {
-            Logger.log("Permission granted: $permission")
             return true
         }
-        Logger.log("Permission NOT granted: $permission")
         return false
     }
 
@@ -95,10 +92,10 @@ abstract class BaseActivity : AppCompatActivity() {
                 MediaStore.Images.Media.insertImage(App.instance.contentResolver, image,
                         TimeFormattingUtil.formatDateWithPattern(millis, TimeFormattingUtil.DISPLAY_TIME_DATE_PATTERN_1),
                         "some description")
-                handler.post {Toast.makeText(this, getString(R.string.image_loaded), Toast.LENGTH_LONG).show()  }
+                handler.post { Toast.makeText(this, getString(R.string.image_loaded), Toast.LENGTH_LONG).show() }
             } catch (e: Exception) {
                 e.printStackTrace()
-                handler.post {Toast.makeText(this, getString(R.string.load_error), Toast.LENGTH_LONG).show()  }
+                handler.post { Toast.makeText(this, getString(R.string.load_error), Toast.LENGTH_LONG).show() }
             }
             loadImageBitmap = null
         } else {

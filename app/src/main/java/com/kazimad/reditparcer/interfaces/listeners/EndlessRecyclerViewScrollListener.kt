@@ -2,9 +2,6 @@ package com.kazimad.reditparcer.interfaces.listeners
 
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import com.kazimad.reditparcer.tools.Logger
-import com.kazimad.reditparcer.R.string.loading
-
 
 
 /**
@@ -44,5 +41,6 @@ abstract class EndlessRecyclerViewScrollListener(private val layoutManager: Line
         this.previousTotal = previousTotal
         this.loading = loading
     }
+
     abstract fun onLoadMore()
 }
