@@ -10,15 +10,12 @@ class App : Application() {
 
     companion object {
         lateinit var instance: App
-//        lateinit var usersRepository: UsersRepository
         lateinit var mainComponent: MainComponent
     }
 
     override fun onCreate() {
         super.onCreate()
         mainComponent = DaggerMainComponent.builder().apiModule(ApiModule()).build()
-//        mainComponent.getApi()
         instance = this
-//        usersRepository = UsersRepository()
     }
 }
